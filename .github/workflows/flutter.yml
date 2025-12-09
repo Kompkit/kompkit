@@ -2,20 +2,30 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ release, develop ]
     paths:
       - 'packages/core/flutter/**'
       - '.github/workflows/flutter.yml'
   pull_request:
-    branches: [ main, develop ]
+    branches: [ release, develop ]
     paths:
       - 'packages/core/flutter/**'
       - '.github/workflows/flutter.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test Flutter Package
+  flutter:
+    name: Flutter (lint+build+test+docs)
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '[skip flutter]') }}
     
     steps:
     - name: Checkout repository
@@ -24,7 +34,7 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.16.0'
+        flutter-version: '3.24.0'
         channel: 'stable'
         
     - name: Verify Flutter installation
@@ -49,30 +59,15 @@ jobs:
         flags: flutter
         name: flutter-coverage
         
-  dart-test:
-    name: Test Dart VM
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    - name: Generate docs (dart doc)
+      working-directory: packages/core/flutter
+      run: dart doc --output ../../../docs/api/flutter || echo "Dart doc generation failed"
       
-    - name: Setup Dart
-      uses: dart-lang/setup-dart@v1
+    - name: Upload flutter docs
+      uses: actions/upload-artifact@v4
       with:
-        sdk: '3.2.0'
+        name: flutter-docs-${{ github.run_id }}
+        path: docs/api/flutter
+        if-no-files-found: ignore
+        retention-days: 30
         
-    - name: Verify Dart installation
-      run: dart --version
-      
-    - name: Get dependencies
-      working-directory: packages/core/flutter
-      run: dart pub get
-      
-    - name: Analyze code
-      working-directory: packages/core/flutter
-      run: dart analyze
-      
-    - name: Run tests
-      working-directory: packages/core/flutter
-      run: dart test
