@@ -34,8 +34,11 @@ tasks.test {
 
 tasks.register<Copy>("copyDokkaToDocs") {
   dependsOn(tasks.named("dokkaHtml"))
-  from(layout.buildDirectory.dir("dokka/html"))
-  into(layout.projectDirectory.dir("../../docs/api/android"))
+  from(layout.buildDirectory.dir("dokka/html")) {
+    include("**/*")
+  }
+  into(layout.projectDirectory.dir("../../../docs/api/android"))
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 // ktlint configuration
