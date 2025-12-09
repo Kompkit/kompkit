@@ -1,0 +1,46 @@
+# KompKit Core - Flutter/Dart
+
+Cross-platform utility functions for Flutter and Dart applications. Part of the [KompKit ecosystem](../../../README.md) with identical APIs across Web, Android, and Flutter platforms.
+
+## Quick Start
+
+Add to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  kompkit_core:
+    path: path/to/KompKit/packages/core/flutter
+```
+
+Import and use:
+
+```dart
+import 'package:kompkit_core/kompkit_core.dart';
+
+// Debounce function calls
+final search = debounce<String>((query) => print('Searching: $query'), 
+                                const Duration(milliseconds: 300));
+
+// Validate emails
+print(isEmail('user@example.com')); // true
+
+// Format currency
+print(formatCurrency(1234.56, currency: 'USD', locale: 'en_US')); // "$1,234.56"
+```
+
+## Documentation
+
+- **[Flutter Guide](../../../docs/flutter.md)** - Detailed usage examples and Flutter widgets
+- **[Main README](../../../README.md)** - Project overview and cross-platform APIs
+- **[API Reference](../../../docs/api/)** - Complete API documentation
+
+## Testing
+
+```bash
+flutter test  # Flutter projects
+dart test     # Dart-only projects
+```
+
+## Platform Support
+
+Works on all Flutter platforms (iOS, Android, Web, Desktop) and server-side Dart.

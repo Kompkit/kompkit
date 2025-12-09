@@ -1,0 +1,78 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'packages/core/flutter/**'
+      - '.github/workflows/flutter.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'packages/core/flutter/**'
+      - '.github/workflows/flutter.yml'
+
+jobs:
+  test:
+    name: Test Flutter Package
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.16.0'
+        channel: 'stable'
+        
+    - name: Verify Flutter installation
+      run: flutter --version
+      
+    - name: Get dependencies
+      working-directory: packages/core/flutter
+      run: flutter pub get
+      
+    - name: Analyze code
+      working-directory: packages/core/flutter
+      run: flutter analyze
+      
+    - name: Run tests
+      working-directory: packages/core/flutter
+      run: flutter test --coverage
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: packages/core/flutter/coverage/lcov.info
+        flags: flutter
+        name: flutter-coverage
+        
+  dart-test:
+    name: Test Dart VM
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Dart
+      uses: dart-lang/setup-dart@v1
+      with:
+        sdk: '3.2.0'
+        
+    - name: Verify Dart installation
+      run: dart --version
+      
+    - name: Get dependencies
+      working-directory: packages/core/flutter
+      run: dart pub get
+      
+    - name: Analyze code
+      working-directory: packages/core/flutter
+      run: dart analyze
+      
+    - name: Run tests
+      working-directory: packages/core/flutter
+      run: dart test
