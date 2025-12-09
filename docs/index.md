@@ -2,7 +2,7 @@
 
 Tiny, cross-platform utilities for **Web (TypeScript)** and **Android (Kotlin)**.
 
-Status: `0.0.x-alpha` (APIs may change).
+Status: `V0.1.0-alpha`.
 
 ## Utilities
 

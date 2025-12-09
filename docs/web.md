@@ -2,7 +2,7 @@
 
 KompKit Core provides small, framework-agnostic utilities for web applications written in TypeScript.
 
-Status: `0.0.x-alpha`.
+Status: `V0.1.0-alpha`.
 
 ## Installation
 ```bash
