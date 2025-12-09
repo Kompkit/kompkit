@@ -88,6 +88,74 @@ suspend fun fetchResults(query: String): List<String> {
 }
 ```
 
+## Debounced search input (Flutter)
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:kompkit_core/kompkit_core.dart';
+
+class SearchScreen extends StatefulWidget {
+  @override
+  _SearchScreenState createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController _controller = TextEditingController();
+  late final Function(String) _debouncedSearch;
+  List<String> _results = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _debouncedSearch = debounce<String>((String query) async {
+      if (query.isEmpty) return;
+      final results = await _fetchResults(query);
+      setState(() {
+        _results = results;
+      });
+    }, const Duration(milliseconds: 400));
+  }
+
+  Future<List<String>> _fetchResults(String query) async {
+    // API call here
+    await Future.delayed(Duration(milliseconds: 500)); // Simulate API delay
+    return ['Result 1 for $query', 'Result 2 for $query'];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Search')),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: TextField(
+              controller: _controller,
+              onChanged: _debouncedSearch,
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _results.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_results[index]),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
 ## Currency formatting with locale switch
 
 ```tsx
@@ -152,5 +220,133 @@ function ContactForm() {
       <button type="submit">Submit</button>
     </form>
   );
+}
+```
+
+## Currency formatting with locale switch (Flutter)
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:kompkit_core/kompkit_core.dart';
+
+class PriceDisplay extends StatefulWidget {
+  final double amount;
+  
+  const PriceDisplay({Key? key, required this.amount}) : super(key: key);
+  
+  @override
+  _PriceDisplayState createState() => _PriceDisplayState();
+}
+
+class _PriceDisplayState extends State<PriceDisplay> {
+  String _selectedLocale = 'en_US';
+  
+  final Map<String, Map<String, String>> _localeConfig = {
+    'en_US': {'currency': 'USD', 'locale': 'en_US'},
+    'es_ES': {'currency': 'EUR', 'locale': 'es_ES'},
+    'ja_JP': {'currency': 'JPY', 'locale': 'ja_JP'},
+  };
+  
+  @override
+  Widget build(BuildContext context) {
+    final config = _localeConfig[_selectedLocale]!;
+    final formatted = formatCurrency(
+      widget.amount,
+      currency: config['currency']!,
+      locale: config['locale']!,
+    );
+    
+    return Column(
+      children: [
+        Text(
+          'Price: $formatted',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        SizedBox(height: 16),
+        DropdownButton<String>(
+          value: _selectedLocale,
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedLocale = newValue!;
+            });
+          },
+          items: _localeConfig.keys.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(_localeConfig[value]!['currency']!),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}
+```
+
+## Email validation on form submission (Flutter)
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:kompkit_core/kompkit_core.dart';
+
+class ContactForm extends StatefulWidget {
+  @override
+  _ContactFormState createState() => _ContactFormState();
+}
+
+class _ContactFormState extends State<ContactForm> {
+  final TextEditingController _emailController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  
+  void _handleSubmit() {
+    if (_formKey.currentState!.validate()) {
+      // Submit form
+      print('Submitting: ${_emailController.text}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Form submitted successfully!')),
+      );
+    }
+  }
+  
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    if (!isEmail(value)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Contact Form')),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _emailController,
+                validator: _validateEmail,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _handleSubmit,
+                child: Text('Submit'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 ```

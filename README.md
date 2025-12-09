@@ -3,17 +3,19 @@
 [![Version](https://img.shields.io/badge/version-0.1.0--alpha-orange.svg)](https://github.com/Kompkit/KompKit/releases)
 [![Web CI](https://github.com/Kompkit/KompKit/actions/workflows/web.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/web.yml)
 [![Kotlin CI](https://github.com/Kompkit/KompKit/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/android.yml)
+[![Flutter CI](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white)](https://dart.dev/)
 
 > **⚠️ Alpha Release**: This is an early alpha version. APIs may change before stable release.
 
-A lightweight cross-platform utility kit providing essential functions for Android (Kotlin) and Web (TypeScript) development. Built as a monorepo with identical APIs across platforms.
+A lightweight cross-platform utility kit providing essential functions for Web (TypeScript), Android (Kotlin), and Flutter (Dart) development. Built as a monorepo with identical APIs across platforms.
 
 ## Overview
 
-KompKit provides essential utility functions that work seamlessly across web (TypeScript) and Android (Kotlin) platforms. Built with developer experience in mind, it offers identical APIs across platforms while leveraging platform-specific optimizations.
+KompKit provides essential utility functions that work seamlessly across Web (TypeScript), Android (Kotlin), and Flutter (Dart) platforms. Built with developer experience in mind, it offers identical APIs across platforms while leveraging platform-specific optimizations.
 
 ### Monorepo Structure
 
@@ -21,6 +23,7 @@ KompKit provides essential utility functions that work seamlessly across web (Ty
 |--------|----------|-------------|--------|
 | `packages/core/web` | TypeScript | Web utilities with Node.js support | ✅ Alpha |
 | `packages/core/android` | Kotlin JVM | Android utilities with coroutines | ✅ Alpha |
+| `packages/core/flutter` | Dart | Flutter/Dart utilities with async support | ✅ Alpha |
 | `docs/` | Documentation | API docs, guides, and examples | ✅ Alpha |
 | `.github/workflows/` | CI/CD | Automated testing and validation | ✅ Active |
 
@@ -46,6 +49,7 @@ KompKit provides essential utility functions that work seamlessly across web (Ty
 
 - **Web**: Node.js 20+ and npm/yarn
 - **Android**: JDK 17+ and Kotlin 2.1+
+- **Flutter**: Flutter 3.0+ and Dart 3.0+
 
 ### Installation
 
@@ -85,6 +89,24 @@ dependencies {
 }
 ```
 
+#### Flutter Development
+
+```bash
+# Clone the repository
+git clone https://github.com/Kompkit/KompKit.git
+
+# Add to your Flutter project's pubspec.yaml
+dependencies:
+  kompkit_core:
+    path: path/to/KompKit/packages/core/flutter
+
+# Get dependencies
+flutter pub get
+
+# Run tests
+flutter test
+```
+
 ### Quick Start
 
 Once installed, you can import and use KompKit utilities:
@@ -113,6 +135,18 @@ println(isEmail("user@example.com")) // true
 println(formatCurrency(1234.56)) // "1.234,56 €"
 ```
 
+**Dart/Flutter:**
+```dart
+import 'package:kompkit_core/kompkit_core.dart';
+
+final search = debounce<String>((String query) {
+  print('Searching: $query');
+}, const Duration(milliseconds: 300));
+
+print(isEmail('user@example.com')); // true
+print(formatCurrency(1234.56)); // "1.234,56 €"
+```
+
 ## Documentation
 
 ### 📚 Detailed Guides
@@ -136,16 +170,21 @@ println(formatCurrency(1234.56)) // "1.234,56 €"
 KompKit/
 ├── .github/workflows/          # CI/CD pipelines
 │   ├── web.yml                # Web package testing
-│   └── android.yml            # Kotlin package testing
+│   ├── android.yml            # Kotlin package testing
+│   └── flutter.yml            # Flutter/Dart package testing
 ├── packages/core/
 │   ├── web/                   # TypeScript package
 │   │   ├── src/              # Source files
 │   │   ├── tests/            # Test files  
 │   │   └── package.json
-│   └── android/              # Kotlin JVM package
-│       ├── src/main/kotlin/  # Source files
-│       ├── src/test/kotlin/  # Test files
-│       └── build.gradle.kts
+│   ├── android/              # Kotlin JVM package
+│   │   ├── src/main/kotlin/  # Source files
+│   │   ├── src/test/kotlin/  # Test files
+│   │   └── build.gradle.kts
+│   └── flutter/              # Dart package
+│       ├── src/              # Source files
+│       ├── test/             # Test files
+│       └── pubspec.yaml
 ├── docs/                     # Documentation
 │   ├── api/                  # Generated API docs
 │   └── *.md                  # Guides and references
@@ -158,8 +197,10 @@ KompKit/
 - **Minimum Requirements**: 
   - Node.js 20+ (Web)
   - JDK 17+ (Android)
+  - Flutter 3.0+ (Flutter)
   - TypeScript 5.6+
   - Kotlin 2.1+
+  - Dart 3.0+
 
 ## Contributing
 

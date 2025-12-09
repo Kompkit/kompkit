@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This document describes the architecture and design decisions behind KompKit, a cross-platform utility library for TypeScript and Kotlin.
+This document describes the architecture and design decisions behind KompKit, a cross-platform utility library for TypeScript, Kotlin, and Dart.
 
 ## Design Philosophy
 
@@ -8,7 +8,7 @@ This document describes the architecture and design decisions behind KompKit, a 
 
 KompKit is designed with cross-platform compatibility as the primary goal. Every utility function must:
 
-1. **Maintain API parity** across TypeScript and Kotlin implementations
+1. **Maintain API parity** across TypeScript, Kotlin, and Dart implementations
 2. **Provide identical behavior** regardless of platform
 3. **Use platform-native patterns** while maintaining consistency
 4. **Minimize dependencies** to reduce bundle size and complexity
@@ -21,7 +21,8 @@ We use a monorepo approach to ensure consistency and simplify development:
 KompKit/
 ├── packages/core/              # Core utility packages
 │   ├── web/                   # TypeScript/JavaScript implementation
-│   └── android/               # Kotlin JVM implementation
+│   ├── android/               # Kotlin JVM implementation
+│   └── flutter/               # Dart/Flutter implementation
 ├── docs/                      # Documentation and guides
 ├── .github/workflows/         # CI/CD pipelines
 └── [root configuration]       # Lerna, npm, Git configuration
@@ -35,10 +36,11 @@ KompKit/
 |--------|----------|---------|------------------|
 | `packages/core/web` | Web/Node.js | TypeScript utilities | TypeScript 5.6+, Vitest, TypeDoc |
 | `packages/core/android` | JVM/Android | Kotlin utilities | Kotlin 2.1.0, JUnit, Dokka |
+| `packages/core/flutter` | Flutter/Dart | Dart utilities | Dart 3.0+, Flutter Test, DartDoc |
 
 ### Shared Concepts
 
-Both modules implement identical functionality:
+All modules implement identical functionality:
 
 - **debounce**: Function execution delay with cancellation
 - **isEmail**: Email validation using regex patterns
@@ -206,15 +208,16 @@ docs/
 ├── ARCHITECTURE.md       # This document
 └── api/                  # Generated API docs
     ├── web/              # TypeDoc output
-    └── android/          # Dokka output
+    ├── android/          # Dokka output
+    └── flutter/          # DartDoc output
 ```
 
 ### Documentation Generation
 
 **Automated documentation pipeline:**
 
-1. **Source comments**: JSDoc (TypeScript) + KDoc (Kotlin)
-2. **Build process**: TypeDoc + Dokka generation
+1. **Source comments**: JSDoc (TypeScript) + KDoc (Kotlin) + DartDoc (Dart)
+2. **Build process**: TypeDoc + Dokka + DartDoc generation
 3. **CI integration**: Docs updated on every build
 4. **Artifact storage**: 30-day retention for documentation
 

@@ -8,6 +8,7 @@ We welcome contributions to KompKit! This document provides guidelines for contr
 
 - **Node.js** 20+ and npm
 - **JDK** 17+ (for Kotlin development)
+- **Flutter** 3.0+ and Dart 3.0+ (for Flutter development)
 - **Git** for version control
 
 ### Development Setup
@@ -68,9 +69,9 @@ test(web): add edge cases for email validation
 
 ### Code Guidelines
 
-1. **Cross-platform API parity**: Maintain identical APIs across TypeScript and Kotlin implementations
+1. **Cross-platform API parity**: Maintain identical APIs across TypeScript, Kotlin, and Dart implementations
 2. **Zero dependencies**: Avoid adding runtime dependencies unless absolutely necessary
-3. **Comprehensive testing**: Every feature must include tests for both platforms
+3. **Comprehensive testing**: Every feature must include tests for all platforms
 4. **Documentation**: Update API docs and examples for new features
 5. **Type safety**: Use TypeScript and Kotlin type systems effectively
 
@@ -100,6 +101,9 @@ npm run test:web
 
 # Run Kotlin tests only
 npm run test:android
+
+# Run Flutter tests only
+cd packages/core/flutter && flutter test
 ```
 
 ### Documentation
@@ -149,14 +153,17 @@ When adding a new utility function:
 3. **Add comprehensive tests**:
    - Web: `packages/core/web/tests/`
    - Kotlin: `packages/core/android/src/test/kotlin/`
+   - Flutter: `packages/core/flutter/test/`
 
 4. **Update exports**:
    - Add to `packages/core/web/src/index.ts`
+   - Add to `packages/core/flutter/src/kompkit_core.dart`
    - Kotlin exports are automatic via package structure
 
 5. **Document with examples**:
    - Add JSDoc comments (TypeScript)
    - Add KDoc comments (Kotlin)
+   - Add DartDoc comments (Dart)
 
 ## Code Style
 
@@ -173,6 +180,13 @@ When adding a new utility function:
 - Use explicit types for public APIs
 - Follow Kotlin coding conventions
 
+### Dart/Flutter
+- Follow Dart formatting rules (`dart format`)
+- Use `flutter analyze` for static analysis
+- Prefer `final` over `var` when possible
+- Use explicit types for public APIs
+- Follow Dart style guide conventions
+
 ## Pull Request Process
 
 1. **Create a feature branch**:
@@ -183,7 +197,7 @@ When adding a new utility function:
    ```
 
 2. **Make your changes**:
-   - Implement feature in both platforms
+   - Implement feature in all platforms (Web, Android, Flutter)
    - Add comprehensive tests
    - Update documentation
 
@@ -191,6 +205,7 @@ When adding a new utility function:
    ```bash
    npm test
    cd packages/core/android && ./gradlew test
+   cd packages/core/flutter && flutter test
    ```
 
 4. **Commit with conventional messages**:
@@ -208,8 +223,8 @@ When adding a new utility function:
 
 ### PR Checklist
 
-- [ ] ✅ Feature implemented in both TypeScript and Kotlin
-- [ ] ✅ Tests added for both platforms with good coverage
+- [ ] ✅ Feature implemented in TypeScript, Kotlin, and Dart
+- [ ] ✅ Tests added for all platforms with good coverage
 - [ ] ✅ All existing tests pass (`npm test`)
 - [ ] ✅ Code follows style guidelines (ktlint, ESLint)
 - [ ] ✅ API documentation updated (JSDoc/KDoc)

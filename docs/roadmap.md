@@ -42,6 +42,6 @@ The focus is on:
 - Optional React hooks package (`@kompkit/react`)
 - Optional Vue composables package (`@kompkit/vue`)
 - UI component library (post-1.0)
-- Additional platform support (iOS, Flutter)
+- Additional platform support (iOS native)
 
 Timelines are subject to change based on community feedback and contributions.
