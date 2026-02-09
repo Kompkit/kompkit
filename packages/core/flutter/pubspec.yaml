@@ -1,6 +1,6 @@
 name: kompkit_core
 description: Cross-platform utility functions for Flutter and Dart applications. Part of the KompKit ecosystem.
-version: 0.1.0-alpha
+version: 0.2.0-alpha
 homepage: https://github.com/Kompkit/KompKit
 repository: https://github.com/Kompkit/KompKit
 

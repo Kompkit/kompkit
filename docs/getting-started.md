@@ -2,7 +2,7 @@
 
 KompKit Core is a small cross-platform utility library for Web (TypeScript), Android (Kotlin), and Flutter (Dart).
 
-Status: `V0.1.0-alpha`.
+Status: `V0.2.0-alpha`.
 
 ## Install
 

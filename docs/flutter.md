@@ -2,6 +2,8 @@
 
 This guide covers using KompKit Core utilities in Flutter and Dart applications.
 
+Status: `V0.2.0-alpha`.
+
 ## Installation
 
 ### Flutter Projects
@@ -81,7 +83,7 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   late final Function(String) _debouncedSearch;
-  
+
   @override
   void initState() {
     super.initState();
@@ -90,12 +92,12 @@ class _SearchWidgetState extends State<SearchWidget> {
       _performSearch(query);
     }, const Duration(milliseconds: 300));
   }
-  
+
   void _performSearch(String query) {
     // Your search logic here
     print('Searching for: $query');
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -165,14 +167,14 @@ class PriceDisplay extends StatelessWidget {
   final double price;
   final String currency;
   final String locale;
-  
+
   const PriceDisplay({
     Key? key,
     required this.price,
     this.currency = 'USD',
     this.locale = 'en_US',
   }) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -217,10 +219,10 @@ class _DemoScreenState extends State<DemoScreen> {
   final _emailController = TextEditingController();
   final _priceController = TextEditingController();
   late final Function(String) _debouncedEmailCheck;
-  
+
   String _emailStatus = '';
   String _formattedPrice = '';
-  
+
   @override
   void initState() {
     super.initState();
@@ -230,14 +232,14 @@ class _DemoScreenState extends State<DemoScreen> {
       });
     }, const Duration(milliseconds: 300));
   }
-  
+
   void _formatPrice() {
     final price = double.tryParse(_priceController.text) ?? 0;
     setState(() {
       _formattedPrice = formatCurrency(price, currency: 'USD', locale: 'en_US');
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -299,7 +301,7 @@ dart test
 KompKit Core for Flutter/Dart works on:
 
 - ✅ Flutter iOS
-- ✅ Flutter Android  
+- ✅ Flutter Android
 - ✅ Flutter Web
 - ✅ Flutter Desktop (Windows, macOS, Linux)
 - ✅ Dart VM (Server-side)

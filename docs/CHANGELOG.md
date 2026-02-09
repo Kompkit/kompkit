@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0-alpha] - 2026-02-09
+
+### Changed
+
+#### Dependency Updates
+
+- **Kotlin**: `2.1.0` → `2.3.0`
+- **ktlint-gradle**: `12.1.2` → `14.0.1`
+- **detekt**: `1.23.7` → `1.23.8`
+- **Vitest**: `^1.6.0` → `^3.0.0`
+- **tsup**: `^8.0.0` → `^8.5.0`
+- **TypeDoc**: `^0.28.14` → `^0.28.16`
+- **TypeScript**: `^5.6.0` → `^5.7.0`
+- **intl** (Dart): `^0.19.0` → `^0.20.0`
+- **flutter_lints**: `^3.0.0` → `^5.0.0`
+- **codecov-action**: `v3` → `v5`
+- **Flutter CI**: `3.24.0` → `3.27.4`
+
+#### Documentation
+
+- Added Flutter platform references across all documentation (ARCHITECTURE, CHANGELOG, README_CI, contributing, roadmap)
+- Updated outdated coroutines version references (`1.8.1` → `1.10.2`) in docs
+- Fixed Web CI path filter to exclude Flutter changes
+- Updated API signatures and platform-specific adaptations in ARCHITECTURE.md
+
+### Fixed
+
+- Web CI workflow now correctly excludes `packages/core/flutter/**` from triggers
+- Documentation inconsistencies where Flutter was missing from cross-platform references
+- Stale version numbers across documentation files
+
+---
+
 ## [0.1.0-alpha] - 2025-11-10
 
 ### Added

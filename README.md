@@ -196,7 +196,7 @@ KompKit/
 
 ## Version Information
 
-- **Current Version**: `0.1.0-alpha`
+- **Current Version**: `0.2.0-alpha`
 - **Minimum Requirements**:
   - Node.js 20+ (Web)
   - JDK 17+ (Android)
