@@ -1,13 +1,32 @@
 {
-  "name": "@kompkit/core",
-  "version": "0.2.0-alpha",
+  "name": "kompkit-core",
+  "version": "0.2.0-alpha.0",
+  "description": "Cross-platform utility functions for web applications. Part of the KompKit ecosystem.",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "publishConfig": {
-    "access": "public"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kompkit/KompKit.git",
+    "directory": "packages/core/web"
   },
+  "homepage": "https://github.com/Kompkit/KompKit",
+  "bugs": "https://github.com/Kompkit/KompKit/issues",
+  "keywords": [
+    "utilities",
+    "debounce",
+    "validation",
+    "email",
+    "currency",
+    "format",
+    "cross-platform"
+  ],
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
