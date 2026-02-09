@@ -6,11 +6,20 @@ Status: `V0.2.0-alpha`.
 
 ## Installation
 
-Add the dependency to your module `build.gradle.kts`:
+> **Note**: The Android/Kotlin package is not yet published to Maven. Use a local project reference for now.
+
+Add the project reference to your `settings.gradle.kts`:
+
+```kotlin
+include(":kompkit-core")
+project(":kompkit-core").projectDir = file("path/to/KompKit/packages/core/android")
+```
+
+Then add the dependency to your module `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.kompkit:core:<version>")
+    implementation(project(":kompkit-core"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }
 ```

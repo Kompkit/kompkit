@@ -6,31 +6,40 @@ Status: `V0.2.0-alpha`.
 
 ## Install
 
-### Web (React/Vue)
+### Web (npm)
 
 ```bash
 npm i kompkit-core
 ```
 
-### Android (Gradle)
+> [npmjs.com/package/kompkit-core](https://www.npmjs.com/package/kompkit-core)
 
-Add the dependency to your module build file:
+### Flutter / Dart (pub.dev)
 
-```kotlin
-dependencies {
-    implementation("com.kompkit:core:<version>")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-}
-```
-
-### Flutter (pubspec.yaml)
-
-Add the dependency to your pubspec.yaml:
+Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core:
-    path: path/to/KompKit/packages/core/flutter
+  kompkit_core: ^0.2.0-alpha.0
+```
+
+Then run:
+
+```bash
+flutter pub get
+```
+
+> [pub.dev/packages/kompkit_core](https://pub.dev/packages/kompkit_core)
+
+### Android (Gradle) — Local only
+
+> Not yet published to Maven. Use a local project reference for now.
+
+```kotlin
+dependencies {
+    implementation(project(":kompkit-core"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+}
 ```
 
 ## Build and test locally

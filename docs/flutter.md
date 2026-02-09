@@ -12,8 +12,7 @@ Add KompKit Core to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core:
-    path: path/to/KompKit/packages/core/flutter
+  kompkit_core: ^0.2.0-alpha.0
 ```
 
 Then run:
@@ -22,14 +21,15 @@ Then run:
 flutter pub get
 ```
 
+> Published on [pub.dev/packages/kompkit_core](https://pub.dev/packages/kompkit_core)
+
 ### Dart Projects
 
 For server-side Dart projects, add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core:
-    path: path/to/KompKit/packages/core/flutter
+  kompkit_core: ^0.2.0-alpha.0
 ```
 
 Then run:

@@ -8,9 +8,10 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core:
-    path: path/to/KompKit/packages/core/flutter
+  kompkit_core: ^0.2.0-alpha.0
 ```
+
+> Published on [pub.dev/packages/kompkit_core](https://pub.dev/packages/kompkit_core)
 
 Import and use:
 
@@ -18,7 +19,7 @@ Import and use:
 import 'package:kompkit_core/kompkit_core.dart';
 
 // Debounce function calls
-final search = debounce<String>((query) => print('Searching: $query'), 
+final search = debounce<String>((query) => print('Searching: $query'),
                                 const Duration(milliseconds: 300));
 
 // Validate emails
