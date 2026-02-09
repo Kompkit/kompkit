@@ -6,7 +6,7 @@ Real-world examples using KompKit Core utilities.
 
 ```tsx
 import { useState, useEffect } from "react";
-import { debounce } from "@kompkit/core";
+import { debounce } from "kompkit-core";
 
 function SearchComponent() {
   const [query, setQuery] = useState("");
@@ -160,7 +160,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
 ```tsx
 import { useState } from "react";
-import { formatCurrency } from "@kompkit/core";
+import { formatCurrency } from "kompkit-core";
 
 function PriceDisplay({ amount }: { amount: number }) {
   const [locale, setLocale] = useState<"en-US" | "es-ES" | "ja-JP">("en-US");
@@ -191,7 +191,7 @@ function PriceDisplay({ amount }: { amount: number }) {
 
 ```tsx
 import { useState } from "react";
-import { isEmail } from "@kompkit/core";
+import { isEmail } from "kompkit-core";
 
 function ContactForm() {
   const [email, setEmail] = useState("");
@@ -231,22 +231,22 @@ import 'package:kompkit_core/kompkit_core.dart';
 
 class PriceDisplay extends StatefulWidget {
   final double amount;
-  
+
   const PriceDisplay({Key? key, required this.amount}) : super(key: key);
-  
+
   @override
   _PriceDisplayState createState() => _PriceDisplayState();
 }
 
 class _PriceDisplayState extends State<PriceDisplay> {
   String _selectedLocale = 'en_US';
-  
+
   final Map<String, Map<String, String>> _localeConfig = {
     'en_US': {'currency': 'USD', 'locale': 'en_US'},
     'es_ES': {'currency': 'EUR', 'locale': 'es_ES'},
     'ja_JP': {'currency': 'JPY', 'locale': 'ja_JP'},
   };
-  
+
   @override
   Widget build(BuildContext context) {
     final config = _localeConfig[_selectedLocale]!;
@@ -255,7 +255,7 @@ class _PriceDisplayState extends State<PriceDisplay> {
       currency: config['currency']!,
       locale: config['locale']!,
     );
-    
+
     return Column(
       children: [
         Text(
@@ -297,7 +297,7 @@ class ContactForm extends StatefulWidget {
 class _ContactFormState extends State<ContactForm> {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  
+
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       // Submit form
@@ -307,7 +307,7 @@ class _ContactFormState extends State<ContactForm> {
       );
     }
   }
-  
+
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -317,7 +317,7 @@ class _ContactFormState extends State<ContactForm> {
     }
     return null;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

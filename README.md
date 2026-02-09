@@ -53,58 +53,45 @@ KompKit provides essential utility functions that work seamlessly across Web (Ty
 
 ### Installation
 
-> **Note**: Alpha packages are not yet published to registries. Clone the repository for local development.
-
-#### Web Development
+#### Web (npm)
 
 ```bash
-# Clone the repository
-git clone https://github.com/Kompkit/KompKit.git
-cd KompKit
-
-# Install dependencies
-npm install
-
-# Build the web package
-npm run build
-
-# Run tests
-npm run test:web
+npm i kompkit-core
 ```
 
-#### Android Development
+> Published on [npmjs.com/package/kompkit-core](https://www.npmjs.com/package/kompkit-core)
+
+#### Flutter / Dart (pub.dev)
+
+Add to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  kompkit_core: ^0.2.0-alpha.0
+```
+
+Then run:
 
 ```bash
-# Clone the repository
-git clone https://github.com/Kompkit/KompKit.git
+flutter pub get
+```
 
-# Include in your Android project's settings.gradle.kts
+> Published on [pub.dev/packages/kompkit_core](https://pub.dev/packages/kompkit_core)
+
+#### Android (Kotlin) — Local only
+
+> **Note**: The Android/Kotlin package is not yet published to Maven. Use a local project reference for now.
+
+```kotlin
+// settings.gradle.kts
 include(":kompkit-core")
 project(":kompkit-core").projectDir = file("path/to/KompKit/packages/core/android")
 
-# Add to your app's build.gradle.kts
+// app/build.gradle.kts
 dependencies {
     implementation(project(":kompkit-core"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
-```
-
-#### Flutter Development
-
-```bash
-# Clone the repository
-git clone https://github.com/Kompkit/KompKit.git
-
-# Add to your Flutter project's pubspec.yaml
-dependencies:
-  kompkit_core:
-    path: path/to/KompKit/packages/core/flutter
-
-# Get dependencies
-flutter pub get
-
-# Run tests
-flutter test
 ```
 
 ### Quick Start
@@ -114,7 +101,7 @@ Once installed, you can import and use KompKit utilities:
 **TypeScript/JavaScript:**
 
 ```typescript
-import { debounce, isEmail, formatCurrency } from "@kompkit/core";
+import { debounce, isEmail, formatCurrency } from "kompkit-core";
 
 const search = debounce((query: string) => {
   console.log("Searching:", query);

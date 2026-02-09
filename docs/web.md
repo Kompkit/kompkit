@@ -7,7 +7,7 @@ Status: `V0.2.0-alpha`.
 ## Installation
 
 ```bash
-npm i @kompkit/core
+npm i kompkit-core
 ```
 
 ## Imports
@@ -15,13 +15,13 @@ npm i @kompkit/core
 ESM:
 
 ```ts
-import { debounce, isEmail, formatCurrency } from "@kompkit/core";
+import { debounce, isEmail, formatCurrency } from "kompkit-core";
 ```
 
 CommonJS:
 
 ```js
-const { debounce, isEmail, formatCurrency } = require("@kompkit/core");
+const { debounce, isEmail, formatCurrency } = require("kompkit-core");
 ```
 
 ## Usage examples
@@ -29,7 +29,7 @@ const { debounce, isEmail, formatCurrency } = require("@kompkit/core");
 ### debounce
 
 ```ts
-import { debounce } from "@kompkit/core";
+import { debounce } from "kompkit-core";
 
 const onType = debounce((value: string) => {
   console.log("Search:", value);
@@ -43,7 +43,7 @@ onType("kompkit"); // only this call will execute after ~300ms
 ### isEmail
 
 ```ts
-import { isEmail } from "@kompkit/core";
+import { isEmail } from "kompkit-core";
 
 isEmail("test@example.com"); // true
 isEmail("invalid@"); // false
@@ -52,7 +52,7 @@ isEmail("invalid@"); // false
 ### formatCurrency
 
 ```ts
-import { formatCurrency } from "@kompkit/core";
+import { formatCurrency } from "kompkit-core";
 
 formatCurrency(1234.56); // "1.234,56 €" (es-ES by default)
 formatCurrency(1234.56, "USD", "en-US"); // "$1,234.56"
@@ -62,7 +62,7 @@ formatCurrency(1234.56, "USD", "en-US"); // "$1,234.56"
 
 ```tsx
 import { useState } from "react";
-import { debounce } from "@kompkit/core";
+import { debounce } from "kompkit-core";
 
 export function SearchBox() {
   const [value, setValue] = useState("");
@@ -85,7 +85,7 @@ export function SearchBox() {
 ```vue
 <script setup lang="ts">
 import { ref } from "vue";
-import { debounce } from "@kompkit/core";
+import { debounce } from "kompkit-core";
 
 const value = ref("");
 const run = debounce((v: string) => console.log("search", v), 250);
