@@ -5,7 +5,8 @@ KompKit Core is in early development. This roadmap outlines planned features and
 ## Current phase: Stability and parity
 
 The focus is on:
-- Ensuring API consistency between web and android implementations
+
+- Ensuring API consistency between web, android, and flutter implementations
 - Expanding test coverage
 - Fixing bugs and edge cases
 - Improving documentation
@@ -42,6 +43,6 @@ The focus is on:
 - Optional React hooks package (`@kompkit/react`)
 - Optional Vue composables package (`@kompkit/vue`)
 - UI component library (post-1.0)
-- Additional platform support (iOS, Flutter)
+- Additional platform support (iOS native)
 
 Timelines are subject to change based on community feedback and contributions.

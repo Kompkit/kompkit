@@ -1,8 +1,8 @@
 # KompKit Core
 
-Tiny, cross-platform utilities for **Web (TypeScript)** and **Android (Kotlin)**.
+Tiny, cross-platform utilities for **Web (TypeScript)**, **Android (Kotlin)**, and **Flutter (Dart)**.
 
-Status: `0.0.x-alpha` (APIs may change).
+Status: `V0.2.0-alpha`.
 
 ## Utilities
 
@@ -15,7 +15,9 @@ Status: `0.0.x-alpha` (APIs may change).
 - Getting started: [docs/getting-started.md](./getting-started.md)
 - Web guide: [docs/web.md](./web.md)
 - Android guide: [docs/android.md](./android.md)
+- Flutter guide: [docs/flutter.md](./flutter.md)
 - Recipes: [docs/recipes.md](./recipes.md)
 - API Reference (Web): [docs/api/web](./api/web/)
 - API Reference (Android): [docs/api/android](./api/android/)
+- API Reference (Flutter): [docs/api/flutter](./api/flutter/)
 - Roadmap: [docs/roadmap.md](./roadmap.md)

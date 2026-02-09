@@ -2,9 +2,10 @@
 
 KompKit Core provides small, framework-agnostic utilities for web applications written in TypeScript.
 
-Status: `0.0.x-alpha`.
+Status: `V0.2.0-alpha`.
 
 ## Installation
+
 ```bash
 npm i @kompkit/core
 ```
@@ -12,11 +13,13 @@ npm i @kompkit/core
 ## Imports
 
 ESM:
+
 ```ts
 import { debounce, isEmail, formatCurrency } from "@kompkit/core";
 ```
 
 CommonJS:
+
 ```js
 const { debounce, isEmail, formatCurrency } = require("@kompkit/core");
 ```
@@ -24,6 +27,7 @@ const { debounce, isEmail, formatCurrency } = require("@kompkit/core");
 ## Usage examples
 
 ### debounce
+
 ```ts
 import { debounce } from "@kompkit/core";
 
@@ -37,6 +41,7 @@ onType("kompkit"); // only this call will execute after ~300ms
 ```
 
 ### isEmail
+
 ```ts
 import { isEmail } from "@kompkit/core";
 
@@ -45,6 +50,7 @@ isEmail("invalid@"); // false
 ```
 
 ### formatCurrency
+
 ```ts
 import { formatCurrency } from "@kompkit/core";
 
@@ -53,6 +59,7 @@ formatCurrency(1234.56, "USD", "en-US"); // "$1,234.56"
 ```
 
 ## React snippet
+
 ```tsx
 import { useState } from "react";
 import { debounce } from "@kompkit/core";
@@ -63,7 +70,10 @@ export function SearchBox() {
   return (
     <input
       value={value}
-      onChange={(e) => { setValue(e.target.value); run(e.target.value); }}
+      onChange={(e) => {
+        setValue(e.target.value);
+        run(e.target.value);
+      }}
       placeholder="Search"
     />
   );
@@ -71,6 +81,7 @@ export function SearchBox() {
 ```
 
 ## Vue snippet
+
 ```vue
 <script setup lang="ts">
 import { ref } from "vue";
@@ -86,6 +97,7 @@ const run = debounce((v: string) => console.log("search", v), 250);
 ```
 
 ## Notes
+
 - Framework-agnostic: works with React, Vue, or any TS/JS app.
 - Module formats: ESM and CJS are provided.
 - Zero runtime dependencies.

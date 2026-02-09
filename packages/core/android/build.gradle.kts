@@ -1,8 +1,8 @@
 plugins {
-  kotlin("jvm") version "2.1.0"
+  kotlin("jvm") version "2.3.0"
   id("org.jetbrains.dokka") version "2.0.0"
-  id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
-  id("io.gitlab.arturbosch.detekt") version "1.23.7"
+  id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
+  id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
 repositories {
@@ -34,8 +34,11 @@ tasks.test {
 
 tasks.register<Copy>("copyDokkaToDocs") {
   dependsOn(tasks.named("dokkaHtml"))
-  from(layout.buildDirectory.dir("dokka/html"))
-  into(layout.projectDirectory.dir("../../docs/api/android"))
+  from(layout.buildDirectory.dir("dokka/html")) {
+    include("**/*")
+  }
+  into(layout.projectDirectory.dir("../../../docs/api/android"))
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 // ktlint configuration

@@ -1,8 +1,0 @@
-$dokka.format:html-v1
-$dokka.linkExtension:html
-$dokka.location:com.kompkit.core////PointingToDeclaration/kompkit-core-android/com.kompkit.core/index.html
-$dokka.location:com.kompkit.core//debounce/#kotlin.Long#kotlinx.coroutines.CoroutineScope#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),kotlin.Unit]/PointingToDeclaration/kompkit-core-android/com.kompkit.core/debounce.html
-$dokka.location:com.kompkit.core//formatCurrency/#kotlin.Double#kotlin.String#java.util.Locale/PointingToDeclaration/kompkit-core-android/com.kompkit.core/format-currency.html
-$dokka.location:com.kompkit.core//isEmail/#kotlin.String/PointingToDeclaration/kompkit-core-android/com.kompkit.core/is-email.html
-com.kompkit.core
-
