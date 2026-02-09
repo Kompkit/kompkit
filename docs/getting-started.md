@@ -9,7 +9,7 @@ Status: `V0.2.0-alpha`.
 ### Web (React/Vue)
 
 ```bash
-npm i @kompkit/core
+npm i kompkit-core
 ```
 
 ### Android (Gradle)

@@ -114,7 +114,7 @@ Once installed, you can import and use KompKit utilities:
 **TypeScript/JavaScript:**
 
 ```typescript
-import { debounce, isEmail, formatCurrency } from "@kompkit/core";
+import { debounce, isEmail, formatCurrency } from "kompkit-core";
 
 const search = debounce((query: string) => {
   console.log("Searching:", query);
