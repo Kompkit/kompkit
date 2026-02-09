@@ -14,12 +14,14 @@ We welcome contributions to KompKit! This document provides guidelines for contr
 ### Development Setup
 
 1. **Fork and clone the repository**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/KompKit.git
    cd KompKit
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
@@ -50,6 +52,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for consiste
 ```
 
 **Types:**
+
 - `feat`: New features
 - `fix`: Bug fixes
 - `docs`: Documentation changes
@@ -60,6 +63,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for consiste
 - `ci`: CI/CD changes
 
 **Examples:**
+
 ```bash
 feat(web): add throttle utility function
 fix(kotlin): resolve debounce memory leak
@@ -136,18 +140,26 @@ cd packages/core/android && ./gradlew ktlintFormat
 
 When adding a new utility function:
 
-1. **Implement in both platforms**:
+1. **Implement in all three platforms**:
    - TypeScript: `packages/core/web/src/`
    - Kotlin: `packages/core/android/src/main/kotlin/com/kompkit/core/`
+   - Dart: `packages/core/flutter/lib/src/`
 
 2. **Maintain API consistency**:
+
    ```typescript
    // TypeScript
    export function myUtility(param: string): boolean { ... }
    ```
+
    ```kotlin
    // Kotlin
    fun myUtility(param: String): Boolean { ... }
+   ```
+
+   ```dart
+   // Dart
+   bool myUtility(String param) { ... }
    ```
 
 3. **Add comprehensive tests**:
@@ -168,12 +180,14 @@ When adding a new utility function:
 ## Code Style
 
 ### TypeScript
+
 - Use ESLint and Prettier configurations
 - Prefer `const` over `let`
 - Use explicit return types for public APIs
 - Follow existing naming conventions
 
 ### Kotlin
+
 - Follow ktlint formatting rules
 - Use detekt for static analysis
 - Prefer `val` over `var`
@@ -181,6 +195,7 @@ When adding a new utility function:
 - Follow Kotlin coding conventions
 
 ### Dart/Flutter
+
 - Follow Dart formatting rules (`dart format`)
 - Use `flutter analyze` for static analysis
 - Prefer `final` over `var` when possible
@@ -190,6 +205,7 @@ When adding a new utility function:
 ## Pull Request Process
 
 1. **Create a feature branch**:
+
    ```bash
    git checkout develop
    git pull origin develop
@@ -202,6 +218,7 @@ When adding a new utility function:
    - Update documentation
 
 3. **Test thoroughly**:
+
    ```bash
    npm test
    cd packages/core/android && ./gradlew test
@@ -209,12 +226,14 @@ When adding a new utility function:
    ```
 
 4. **Commit with conventional messages**:
+
    ```bash
    git add .
    git commit -m "feat(core): add new utility function"
    ```
 
 5. **Push and create PR**:
+
    ```bash
    git push origin feature/your-feature-name
    ```

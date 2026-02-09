@@ -7,21 +7,26 @@ Status: `V0.1.0-alpha`.
 ## Install
 
 ### Web (React/Vue)
+
 ```bash
 npm i @kompkit/core
 ```
 
 ### Android (Gradle)
+
 Add the dependency to your module build file:
+
 ```kotlin
 dependencies {
     implementation("com.kompkit:core:<version>")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }
 ```
 
 ### Flutter (pubspec.yaml)
+
 Add the dependency to your pubspec.yaml:
+
 ```yaml
 dependencies:
   kompkit_core:
@@ -29,7 +34,9 @@ dependencies:
 ```
 
 ## Build and test locally
+
 Run from the repository root:
+
 ```bash
 # Build web package
 npm run build
@@ -41,7 +48,7 @@ npm run test
 ## Utilities
 
 | Utility          | Description                                      |
-|------------------|--------------------------------------------------|
+| ---------------- | ------------------------------------------------ |
 | `debounce`       | Debounce a function call by a delay.             |
 | `isEmail`        | Validate a string with a basic email regex.      |
 | `formatCurrency` | Format numbers into a localized currency string. |

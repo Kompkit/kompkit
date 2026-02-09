@@ -32,11 +32,11 @@ KompKit/
 
 ### Core Modules
 
-| Module | Platform | Purpose | Technology Stack |
-|--------|----------|---------|------------------|
-| `packages/core/web` | Web/Node.js | TypeScript utilities | TypeScript 5.6+, Vitest, TypeDoc |
-| `packages/core/android` | JVM/Android | Kotlin utilities | Kotlin 2.1.0, JUnit, Dokka |
-| `packages/core/flutter` | Flutter/Dart | Dart utilities | Dart 3.0+, Flutter Test, DartDoc |
+| Module                  | Platform     | Purpose              | Technology Stack                 |
+| ----------------------- | ------------ | -------------------- | -------------------------------- |
+| `packages/core/web`     | Web/Node.js  | TypeScript utilities | TypeScript 5.7+, Vitest, TypeDoc |
+| `packages/core/android` | JVM/Android  | Kotlin utilities     | Kotlin 2.3.0, JUnit, Dokka       |
+| `packages/core/flutter` | Flutter/Dart | Dart utilities       | Dart 3.0+, Flutter Test, DartDoc |
 
 ### Shared Concepts
 
@@ -53,36 +53,60 @@ All modules implement identical functionality:
 We maintain strict API consistency across platforms:
 
 **TypeScript:**
+
 ```typescript
 export function debounce<T extends (...args: any[]) => any>(
-  fn: T, 
-  wait: number = 250
+  fn: T,
+  wait: number = 250,
 ): T;
 
 export function isEmail(value: string): boolean;
 
 export function formatCurrency(
-  amount: number, 
-  currency: string = 'EUR', 
-  locale: string = 'es-ES'
+  amount: number,
+  currency: string = "EUR",
+  locale: string = "es-ES",
 ): string;
 ```
 
 **Kotlin:**
+
 ```kotlin
 fun <T> debounce(
-  waitMs: Long = 250L, 
-  scope: CoroutineScope, 
+  waitMs: Long = 250L,
+  scope: CoroutineScope,
   dest: (T) -> Unit
 ): (T) -> Unit
 
 fun isEmail(value: String): Boolean
 
 fun formatCurrency(
-  amount: Double, 
-  currency: String = "EUR", 
+  amount: Double,
+  currency: String = "EUR",
   locale: Locale = Locale("es", "ES")
 ): String
+```
+
+**Dart:**
+
+```dart
+Function debounce<T>(
+  Function fn,
+  [Duration wait = const Duration(milliseconds: 250)]
+);
+
+VoidCallback debounceVoid(
+  VoidCallback fn,
+  [Duration wait = const Duration(milliseconds: 250)]
+);
+
+bool isEmail(String value);
+
+String formatCurrency(
+  num amount, {
+  String currency = "EUR",
+  String locale = "es_ES",
+});
 ```
 
 ### Platform-Specific Adaptations
@@ -90,16 +114,25 @@ fun formatCurrency(
 While maintaining API consistency, we leverage platform strengths:
 
 #### TypeScript Implementation
+
 - **Closures** for debounce state management
 - **setTimeout/clearTimeout** for timing control
 - **Intl.NumberFormat** for currency formatting
 - **RegExp** for email validation
 
 #### Kotlin Implementation
+
 - **Coroutines** for asynchronous debounce operations
 - **Job cancellation** for timing control
 - **NumberFormat/Currency** for localized formatting
 - **Regex** for email validation
+
+#### Dart/Flutter Implementation
+
+- **Timer** for debounce scheduling and cancellation
+- **intl package** (`NumberFormat.currency`) for localized formatting
+- **RegExp** for email validation
+- **Null safety** with full type-safe APIs
 
 ## Build System Architecture
 
@@ -111,25 +144,27 @@ While maintaining API consistency, we leverage platform strengths:
 {
   "workspaces": ["packages/core/web"],
   "devDependencies": {
-    "lerna": "^8.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.6.0",
-    "typedoc": "^0.28.14",
-    "vitest": "^1.6.0"
+    "lerna": "^8.2.4",
+    "tsup": "^8.5.0",
+    "typescript": "^5.7.0",
+    "typedoc": "^0.28.16",
+    "vitest": "^3.0.0"
   }
 }
 ```
 
 ### Build Targets
 
-| Platform | Build Tool | Output | Documentation |
-|----------|------------|--------|---------------|
-| Web | tsup | ESM + CJS + Types | TypeDoc → `docs/api/web/` |
-| Kotlin | Gradle | JAR | Dokka → `docs/api/android/` |
+| Platform | Build Tool   | Output            | Documentation                 |
+| -------- | ------------ | ----------------- | ----------------------------- |
+| Web      | tsup         | ESM + CJS + Types | TypeDoc → `docs/api/web/`     |
+| Kotlin   | Gradle       | JAR               | Dokka → `docs/api/android/`   |
+| Flutter  | Flutter/Dart | Dart package      | DartDoc → `docs/api/flutter/` |
 
 ### Dependency Strategy
 
 **Zero Runtime Dependencies:**
+
 - Web utilities use only browser/Node.js built-ins
 - Kotlin utilities use only JDK/Kotlin stdlib
 - Development dependencies isolated to build process
@@ -149,7 +184,7 @@ web.yml:
   - TypeDoc generation
   - Artifact upload
 
-# Kotlin CI - packages/core/android/**  
+# Kotlin CI - packages/core/android/**
 android.yml:
   - JDK 17 setup
   - Gradle build (with caching)
@@ -176,19 +211,22 @@ android.yml:
 
 ```
 packages/core/web/tests/
-├── debounce.test.ts
-├── validate.test.ts
-└── format.test.ts
+└── core.test.ts              # All utility tests
 
-packages/core/android/src/test/kotlin/
-├── DebounceTest.kt
-├── ValidateTest.kt
-└── FormatTest.kt
+packages/core/android/src/test/kotlin/com/kompkit/core/
+└── CoreTests.kt              # All utility tests
+
+packages/core/flutter/test/
+├── kompkit_core_test.dart     # Integration tests
+├── debounce_test.dart         # Debounce unit tests
+├── validate_test.dart         # Validation unit tests
+└── format_test.dart           # Formatting unit tests
 ```
 
 ### Test Coverage
 
 **100% coverage requirement** across both platforms:
+
 - Unit tests for all public APIs
 - Edge case validation
 - Error condition handling
@@ -203,7 +241,7 @@ packages/core/android/src/test/kotlin/
 ```
 docs/
 ├── README_CI.md           # CI/CD processes
-├── CONTRIBUTING.md        # Development guidelines  
+├── CONTRIBUTING.md        # Development guidelines
 ├── CHANGELOG.md          # Version history
 ├── ARCHITECTURE.md       # This document
 └── api/                  # Generated API docs
@@ -239,7 +277,6 @@ docs/
 
 - **React Native**: Potential TypeScript reuse
 - **iOS**: Swift implementation following same patterns
-- **Flutter**: Dart implementation with API parity
 - **Python**: Additional server-side support
 
 ### Performance Optimization

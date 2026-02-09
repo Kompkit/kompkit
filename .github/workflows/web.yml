@@ -3,20 +3,22 @@ name: Web CI
 on:
   push:
     branches: [release, develop]
-    paths: 
-      - 'packages/**'
-      - '!packages/core/android/**'
-      - 'package*.json'
-      - 'lerna.json'
-      - '.github/workflows/web.yml'
+    paths:
+      - "packages/**"
+      - "!packages/core/android/**"
+      - "!packages/core/flutter/**"
+      - "package*.json"
+      - "lerna.json"
+      - ".github/workflows/web.yml"
   pull_request:
     branches: [release, develop]
     paths:
-      - 'packages/**'
-      - '!packages/core/android/**'
-      - 'package*.json'
-      - 'lerna.json'
-      - '.github/workflows/web.yml'
+      - "packages/**"
+      - "!packages/core/android/**"
+      - "!packages/core/flutter/**"
+      - "package*.json"
+      - "lerna.json"
+      - ".github/workflows/web.yml"
   workflow_dispatch:
 
 permissions:
@@ -32,7 +34,7 @@ jobs:
     name: Web (lint+build+test+docs)
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, '[skip web]') }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,8 +42,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'npm'
+          node-version: "20.x"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci

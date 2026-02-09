@@ -19,13 +19,13 @@ KompKit provides essential utility functions that work seamlessly across Web (Ty
 
 ### Monorepo Structure
 
-| Module | Platform | Description | Status |
-|--------|----------|-------------|--------|
-| `packages/core/web` | TypeScript | Web utilities with Node.js support | ✅ Alpha |
-| `packages/core/android` | Kotlin JVM | Android utilities with coroutines | ✅ Alpha |
-| `packages/core/flutter` | Dart | Flutter/Dart utilities with async support | ✅ Alpha |
-| `docs/` | Documentation | API docs, guides, and examples | ✅ Alpha |
-| `.github/workflows/` | CI/CD | Automated testing and validation | ✅ Active |
+| Module                  | Platform      | Description                               | Status    |
+| ----------------------- | ------------- | ----------------------------------------- | --------- |
+| `packages/core/web`     | TypeScript    | Web utilities with Node.js support        | ✅ Alpha  |
+| `packages/core/android` | Kotlin JVM    | Android utilities with coroutines         | ✅ Alpha  |
+| `packages/core/flutter` | Dart          | Flutter/Dart utilities with async support | ✅ Alpha  |
+| `docs/`                 | Documentation | API docs, guides, and examples            | ✅ Alpha  |
+| `.github/workflows/`    | CI/CD         | Automated testing and validation          | ✅ Active |
 
 ### Core Utilities
 
@@ -35,11 +35,11 @@ KompKit provides essential utility functions that work seamlessly across Web (Ty
 
 ### Key Features
 
-- ✅ **Cross-platform compatibility** - Identical APIs for web and Android
+- ✅ **Cross-platform compatibility** - Identical APIs for Web, Android, and Flutter
 - ✅ **TypeScript support** - Full type safety and IntelliSense
 - ✅ **Zero dependencies** - Lightweight with no external dependencies
 - ✅ **Comprehensive testing** - 100% test coverage across platforms
-- ✅ **Modern tooling** - Built with latest TypeScript 5.6+ and Kotlin 2.1+
+- ✅ **Modern tooling** - Built with latest TypeScript 5.7+ and Kotlin 2.3+
 - ✅ **Rich documentation** - Auto-generated API docs with examples
 - ✅ **CI/CD Ready** - Automated testing with GitHub Actions
 
@@ -48,7 +48,7 @@ KompKit provides essential utility functions that work seamlessly across Web (Ty
 ### Prerequisites
 
 - **Web**: Node.js 20+ and npm/yarn
-- **Android**: JDK 17+ and Kotlin 2.1+
+- **Android**: JDK 17+ and Kotlin 2.3+
 - **Flutter**: Flutter 3.0+ and Dart 3.0+
 
 ### Installation
@@ -112,18 +112,20 @@ flutter test
 Once installed, you can import and use KompKit utilities:
 
 **TypeScript/JavaScript:**
+
 ```typescript
-import { debounce, isEmail, formatCurrency } from '@kompkit/core';
+import { debounce, isEmail, formatCurrency } from "@kompkit/core";
 
 const search = debounce((query: string) => {
-  console.log('Searching:', query);
+  console.log("Searching:", query);
 }, 300);
 
-console.log(isEmail('user@example.com')); // true
+console.log(isEmail("user@example.com")); // true
 console.log(formatCurrency(1234.56)); // "1.234,56 €"
 ```
 
 **Kotlin:**
+
 ```kotlin
 import com.kompkit.core.*
 
@@ -136,6 +138,7 @@ println(formatCurrency(1234.56)) // "1.234,56 €"
 ```
 
 **Dart/Flutter:**
+
 ```dart
 import 'package:kompkit_core/kompkit_core.dart';
 
@@ -175,7 +178,7 @@ KompKit/
 ├── packages/core/
 │   ├── web/                   # TypeScript package
 │   │   ├── src/              # Source files
-│   │   ├── tests/            # Test files  
+│   │   ├── tests/            # Test files
 │   │   └── package.json
 │   ├── android/              # Kotlin JVM package
 │   │   ├── src/main/kotlin/  # Source files
@@ -194,12 +197,12 @@ KompKit/
 ## Version Information
 
 - **Current Version**: `0.1.0-alpha`
-- **Minimum Requirements**: 
+- **Minimum Requirements**:
   - Node.js 20+ (Web)
   - JDK 17+ (Android)
   - Flutter 3.0+ (Flutter)
-  - TypeScript 5.6+
-  - Kotlin 2.1+
+  - TypeScript 5.7+
+  - Kotlin 2.3+
   - Dart 3.0+
 
 ## Contributing
@@ -207,7 +210,7 @@ KompKit/
 We welcome contributions! Please see our [Contributing Guide](./docs/CONTRIBUTING.md) for details on:
 
 - Development setup
-- Code style and conventions  
+- Code style and conventions
 - Testing requirements
 - Pull request process
 
@@ -224,4 +227,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 > **Alpha Notice**: This project is in active development. APIs may change before the stable 1.0 release. We recommend pinning to specific versions in production applications.
-
