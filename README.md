@@ -1,6 +1,6 @@
 # KompKit
 
-[![Version](https://img.shields.io/badge/version-0.2.0--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
+[![Version](https://img.shields.io/badge/version-0.3.0--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
 [![Web CI](https://github.com/Kompkit/KompKit/actions/workflows/web.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/web.yml)
 [![Kotlin CI](https://github.com/Kompkit/KompKit/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/android.yml)
 [![Flutter CI](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml)
