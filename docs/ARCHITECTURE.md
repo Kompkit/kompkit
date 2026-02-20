@@ -87,12 +87,13 @@ Any unavoidable divergence between platforms must be:
 
 **Current documented divergences:**
 
-| Function         | Divergence                                                      | Reason                                                           |
-| ---------------- | --------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `debounce`       | Kotlin requires `CoroutineScope` parameter                      | Structured concurrency — no global timer API                     |
-| `debounce`       | Kotlin uses trailing lambda for `action`                        | Idiomatic Kotlin; improves call-site readability                 |
-| `formatCurrency` | Kotlin accepts `String` locale, converts to `Locale` internally | JVM `NumberFormat` API requires `java.util.Locale`               |
-| `formatCurrency` | TypeScript (V8) does not throw on unrecognized locale strings   | `Intl.NumberFormat` in V8 silently falls back; Kotlin/Dart throw |
+| Function         | Divergence                                                                                                                            | Reason                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `debounce`       | Kotlin requires `CoroutineScope` parameter                                                                                            | Structured concurrency — no global timer API                                                                                |
+| `debounce`       | Kotlin uses trailing lambda for `action`                                                                                              | Idiomatic Kotlin; improves call-site readability                                                                            |
+| `formatCurrency` | Kotlin accepts `String` locale, converts to `Locale` internally                                                                       | JVM `NumberFormat` API requires `java.util.Locale`                                                                          |
+| `formatCurrency` | TypeScript (V8) and Kotlin (JVM) fall back on unknown locales; Dart throws                                                            | `Intl.NumberFormat` (V8) and `Locale.forLanguageTag` (JVM) are lenient; `intl` (Dart) calls `verifiedLocale()` which throws |
+| `formatCurrency` | Dart validates currency format via regex (3 uppercase letters); Kotlin via `Currency.getInstance`; TypeScript via `Intl.NumberFormat` | Platform APIs differ in how they enforce ISO 4217 — all throw on invalid codes                                              |
 
 ---
 

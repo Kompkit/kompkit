@@ -56,8 +56,10 @@ void main() {
     });
 
     test('throws ArgumentError for invalid locale', () {
+      // intl's NumberFormat throws on unrecognized locales via verifiedLocale().
+      // This is caught and re-thrown as ArgumentError.
       expect(
-        () => formatCurrency(100, currency: 'USD', locale: 'not-a-real-locale-xyz'),
+        () => formatCurrency(100, currency: 'USD', locale: 'zz-ZZ-unknown'),
         throwsArgumentError,
       );
     });

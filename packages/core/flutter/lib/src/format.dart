@@ -25,11 +25,17 @@ import 'package:intl/intl.dart';
 /// formatCurrency(999.99, currency: "GBP", locale: "en-GB");  // "£999.99"
 /// formatCurrency(-50.25, currency: "USD", locale: "en-US");  // "-$50.25"
 /// ```
+/// ISO 4217 currency codes are exactly 3 uppercase ASCII letters.
+final _currencyCodeRe = RegExp(r'^[A-Z]{3}$');
+
 String formatCurrency(
   num amount, {
   String currency = "EUR",
   String locale = "en-US",
 }) {
+  if (!_currencyCodeRe.hasMatch(currency)) {
+    throw ArgumentError('Invalid currency code: "$currency". Expected a 3-letter ISO 4217 code.');
+  }
   // Normalize BCP 47 hyphen separator to the underscore format expected by intl.
   final normalizedLocale = locale.replaceAll('-', '_');
   try {
@@ -41,6 +47,6 @@ String formatCurrency(
   } on ArgumentError {
     rethrow;
   } catch (e) {
-    throw ArgumentError('Invalid currency "$currency" or locale "$locale": $e');
+    throw ArgumentError('Invalid locale "$locale": $e');
   }
 }
