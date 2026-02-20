@@ -2,10 +2,11 @@
 
 ## Supported Versions
 
-| Version | Supported |
-|---|---|
-| `0.2.0-alpha.0` | ✅ Current |
-| `0.1.0-alpha` | ❌ No longer supported |
+| Version         | Supported              |
+| --------------- | ---------------------- |
+| `0.3.0-alpha.0` | ✅ Current             |
+| `0.2.0-alpha.0` | ❌ No longer supported |
+| `0.1.0-alpha`   | ❌ No longer supported |
 
 ## Reporting a Vulnerability
 
@@ -14,6 +15,7 @@
 Please report security vulnerabilities by emailing the maintainers via a [GitHub Security Advisory](https://github.com/Kompkit/KompKit/security/advisories/new).
 
 Include:
+
 - A description of the vulnerability
 - Steps to reproduce
 - Potential impact

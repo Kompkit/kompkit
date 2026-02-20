@@ -8,7 +8,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.2.0-alpha.0
+  kompkit_core: ^0.3.0-alpha.0
 ```
 
 > Published on [pub.dev/packages/kompkit_core](https://pub.dev/packages/kompkit_core)
