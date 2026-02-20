@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: weekly
+      interval: monthly
     target-branch: "develop"
     open-pull-requests-limit: 5
     groups:
@@ -19,7 +19,23 @@ updates:
   - package-ecosystem: gradle
     directory: "/"
     schedule:
-      interval: weekly
+      interval: monthly
+    target-branch: "develop"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
+  - package-ecosystem: pub
+    directory: "/packages/core/flutter"
+    schedule:
+      interval: monthly
     target-branch: "develop"
     open-pull-requests-limit: 5
     groups:
