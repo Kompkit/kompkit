@@ -1,48 +1,49 @@
 # Roadmap
 
-KompKit Core is in early development. This roadmap outlines planned features and improvements.
+## Current State — `0.2.0-alpha.0`
 
-## Current phase: Stability and parity
+KompKit Core is in early alpha. The current release includes:
 
-The focus is on:
+- **3 utilities**: `debounce`, `isEmail`, `formatCurrency`
+- **3 platforms**: TypeScript (npm), Dart/Flutter (pub.dev), Kotlin/JVM (local only)
+- **Conceptual API parity** across all platforms with documented divergences
+- **Full CI/CD** with path-based workflow optimization
+- **Cancel support** on `debounce` across all platforms
 
-- Ensuring API consistency between web, android, and flutter implementations
-- Expanding test coverage
-- Fixing bugs and edge cases
-- Improving documentation
+## Next: `0.3.0-alpha`
 
-## Upcoming utilities
+Focus: utility expansion and Android publishing.
 
-- `throttle` - Throttle function calls to a maximum rate
-- `clamp` - Clamp a number between min and max values
-- `deepEqual` - Deep equality comparison for objects
-- `retry` - Retry failed async operations with backoff
-- `sleep` - Promise-based delay utility
+- `throttle` — Rate-limit function calls (natural companion to `debounce`)
+- `clamp` — Clamp a number between min and max
+- `sleep` — Promise/Future/suspend-based delay utility
+- Publish Android/Kotlin package to Maven Central
+- Add `exports` subpath entries for individual utilities (tree-shaking improvement)
 
-## Design tokens (future)
+## After: `0.4.0-alpha`
 
-- Color palettes
-- Typography scales
-- Spacing systems
-- Cross-platform theme definitions
+Focus: async utilities and deeper platform integration.
 
-## Documentation site
+- `retry` — Retry failed async operations with configurable backoff
+- `deepEqual` — Deep equality comparison for plain objects/maps
+- React hooks companion package (`kompkit-react`) — thin wrappers over core utilities
 
-- Dedicated docs site with interactive examples
-- API reference auto-generated from source
-- Live playground for testing utilities
+## Toward `1.0.0`
 
-## Release plan
+Before a stable 1.0 release, the following must be true:
 
-- `0.1.0` - First beta release with stable API for current utilities
-- `0.2.0` - Additional utilities (throttle, clamp, deepEqual)
-- `1.0.0` - Stable release with full test coverage and documentation
+- All three platform packages published to their respective registries
+- API contract frozen with a documented migration guide for any breaking changes
+- Behavioral test coverage for all edge cases across all platforms
+- Dedicated documentation site with live examples
+- No known behavioral divergences between platforms
 
-## Long-term considerations
+## Long-term (post-1.0)
 
-- Optional React hooks package (`@kompkit/react`)
-- Optional Vue composables package (`@kompkit/vue`)
-- UI component library (post-1.0)
-- Additional platform support (iOS native)
+- Vue composables package (`kompkit-vue`)
+- iOS/Swift implementation following the same API contract
+- Design token utilities (color, spacing, typography) — separate package
 
-Timelines are subject to change based on community feedback and contributions.
+---
+
+Timelines are not fixed. Priorities are driven by community feedback and real-world usage.

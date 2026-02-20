@@ -1,65 +1,59 @@
 import 'dart:async';
 
+/// A debounced function wrapper with a [cancel] method.
+///
+/// Invoke it like the original function; call [cancel] to discard any pending
+/// execution without invoking the action (e.g., in [State.dispose]).
+///
+/// ```dart
+/// final search = debounce<String>((query) => print('Searching: $query'));
+/// search('hello');   // schedules execution after 250ms
+/// search.cancel();   // discards the pending call
+/// ```
+class Debounced<T> {
+  final void Function(T) _action;
+  final Duration _wait;
+  Timer? _timer;
+
+  Debounced._(this._action, this._wait);
+
+  /// Schedules [action] to be called with [arg] after the wait period.
+  /// Resets the timer if called again before the wait elapses.
+  void call(T arg) {
+    _timer?.cancel();
+    _timer = Timer(_wait, () => _action(arg));
+  }
+
+  /// Cancels any pending invocation without executing it.
+  void cancel() {
+    _timer?.cancel();
+    _timer = null;
+  }
+}
+
 /// Debounces a function call by delaying its execution until after a specified wait period.
-/// 
-/// Subsequent calls within the wait period reset the timer, ensuring that the function
-/// is only called once after the specified delay has elapsed without any new calls.
-/// 
-/// This is particularly useful for scenarios like search input fields, where you want
-/// to wait for the user to stop typing before making an API call.
-/// 
+/// Subsequent calls within the wait period reset the timer.
+///
+/// Returns a [Debounced] wrapper that can be called like the original function
+/// and supports [Debounced.cancel] for cleanup.
+///
 /// **Parameters:**
-/// - [fn] - The function to debounce
+/// - [action] - The function to debounce
 /// - [wait] - Duration to wait before invoking the function (defaults to 250ms)
-/// 
-/// **Returns:** A debounced version of the function that accepts a parameter of type [T]
-/// 
+///
 /// **Example:**
 /// ```dart
 /// final search = debounce<String>((String query) {
 ///   print('Searching: $query');
 /// }, const Duration(milliseconds: 300));
-/// 
+///
 /// search('hello'); // Will execute after 300ms if no other calls are made
 /// search('world'); // Previous call is cancelled, this will execute after 300ms
+/// search.cancel(); // Discards the pending call (e.g., in dispose())
 /// ```
-Function debounce<T>(Function fn, [Duration wait = const Duration(milliseconds: 250)]) {
-  Timer? timer;
-  
-  return (T arg) {
-    timer?.cancel();
-    timer = Timer(wait, () => fn(arg));
-  };
+Debounced<T> debounce<T>(
+  void Function(T) action, [
+  Duration wait = const Duration(milliseconds: 250),
+]) {
+  return Debounced._(action, wait);
 }
-
-/// Debounces a void function (function with no parameters).
-/// 
-/// Similar to [debounce], but specifically designed for functions that don't take parameters.
-/// Useful for actions like saving data, refreshing UI, or other side effects.
-/// 
-/// **Parameters:**
-/// - [fn] - The void function to debounce
-/// - [wait] - Duration to wait before invoking the function (defaults to 250ms)
-/// 
-/// **Returns:** A debounced version of the void function
-/// 
-/// **Example:**
-/// ```dart
-/// final saveData = debounceVoid(() {
-///   print('Saving data...');
-/// }, const Duration(milliseconds: 500));
-/// 
-/// saveData(); // Will execute after 500ms if no other calls are made
-/// saveData(); // Previous call is cancelled, this will execute after 500ms
-/// ```
-VoidCallback debounceVoid(VoidCallback fn, [Duration wait = const Duration(milliseconds: 250)]) {
-  Timer? timer;
-  
-  return () {
-    timer?.cancel();
-    timer = Timer(wait, fn);
-  };
-}
-
-/// Type definition for void callback functions
-typedef VoidCallback = void Function();

@@ -46,66 +46,126 @@ All modules implement identical functionality:
 - **isEmail**: Email validation using regex patterns
 - **formatCurrency**: Localized currency formatting
 
+## API Parity Contract
+
+This section defines the formal contract for cross-platform API consistency in KompKit.
+
+### What is Guaranteed
+
+- **Function names** are identical across all platforms (`debounce`, `isEmail`, `formatCurrency`).
+- **Behavioral semantics** are identical: given the same inputs, all platforms produce the same observable output.
+- **Default values** are identical: `wait = 250ms`, `currency = "EUR"`, `locale = "en-US"`.
+- **Error handling philosophy** is consistent: invalid inputs that cannot produce a meaningful result throw/throw-equivalent errors. Silent fallbacks are not permitted.
+- **Cancel capability**: `debounce` returns an object with a `cancel()` method on all platforms, allowing callers to discard pending executions (required for safe use in component lifecycles).
+
+### What May Differ
+
+- **Parameter style**: Named parameters (Dart), trailing lambdas (Kotlin), and positional parameters (TypeScript) are idiomatic per language and are not forced to match syntactically.
+- **Coroutine scope (Kotlin)**: `debounce` requires a `CoroutineScope` because Kotlin's async model mandates structured concurrency. This is a platform constraint, not an API inconsistency. The scope is the last parameter to allow trailing lambda syntax.
+- **Type system expression**: Dart uses `void Function(T)` return types, Kotlin uses `(T) -> Unit`, TypeScript uses a typed wrapper object. All three express the same concept.
+- **Locale string format**: All platforms accept BCP 47 locale strings (e.g., `"en-US"`). Kotlin converts internally to `java.util.Locale` as required by the JVM.
+
+### Conceptual Mental Model
+
+Every utility follows the same mental model regardless of platform:
+
+```
+debounce(action, options)  → Debounced<T>  (with .cancel())
+isEmail(value)             → Boolean
+formatCurrency(amount, options) → String
+```
+
+A developer familiar with the TypeScript API should be able to use the Kotlin or Dart API with only idiomatic adjustments — not conceptual re-learning.
+
+### Platform Divergence Documentation
+
+Any unavoidable divergence between platforms must be:
+
+1. Documented in this section.
+2. Explained with the platform constraint that necessitates it.
+3. Kept minimal — divergence is a cost, not a feature.
+
+**Current documented divergences:**
+
+| Function         | Divergence                                                      | Reason                                                           |
+| ---------------- | --------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `debounce`       | Kotlin requires `CoroutineScope` parameter                      | Structured concurrency — no global timer API                     |
+| `debounce`       | Kotlin uses trailing lambda for `action`                        | Idiomatic Kotlin; improves call-site readability                 |
+| `formatCurrency` | Kotlin accepts `String` locale, converts to `Locale` internally | JVM `NumberFormat` API requires `java.util.Locale`               |
+| `formatCurrency` | TypeScript (V8) does not throw on unrecognized locale strings   | `Intl.NumberFormat` in V8 silently falls back; Kotlin/Dart throw |
+
+---
+
 ## Implementation Strategy
 
 ### API Design
 
-We maintain strict API consistency across platforms:
+We maintain conceptual API parity across platforms:
 
 **TypeScript:**
 
 ```typescript
-export function debounce<T extends (...args: any[]) => any>(
+interface Debounced<T extends (...args: any[]) => void> {
+  (...args: Parameters<T>): void;
+  cancel(): void;
+}
+
+export function debounce<T extends (...args: any[]) => void>(
   fn: T,
-  wait: number = 250,
-): T;
+  wait?: number, // default: 250
+): Debounced<T>;
 
 export function isEmail(value: string): boolean;
 
 export function formatCurrency(
   amount: number,
-  currency: string = "EUR",
-  locale: string = "es-ES",
+  currency?: string, // default: "EUR"
+  locale?: string, // default: "en-US"
 ): string;
 ```
 
 **Kotlin:**
 
 ```kotlin
+class Debounced<T>(private val action: (T) -> Unit) {
+  operator fun invoke(value: T): Unit
+  fun cancel(): Unit
+}
+
 fun <T> debounce(
+  action: (T) -> Unit,
   waitMs: Long = 250L,
-  scope: CoroutineScope,
-  dest: (T) -> Unit
-): (T) -> Unit
+  scope: CoroutineScope,  // platform constraint: structured concurrency
+): Debounced<T>
 
 fun isEmail(value: String): Boolean
 
 fun formatCurrency(
   amount: Double,
   currency: String = "EUR",
-  locale: Locale = Locale("es", "ES")
+  locale: String = "en-US",  // converted internally to java.util.Locale
 ): String
 ```
 
 **Dart:**
 
 ```dart
-Function debounce<T>(
-  Function fn,
-  [Duration wait = const Duration(milliseconds: 250)]
-);
+class Debounced<T> {
+  void call(T arg);
+  void cancel();
+}
 
-VoidCallback debounceVoid(
-  VoidCallback fn,
-  [Duration wait = const Duration(milliseconds: 250)]
-);
+Debounced<T> debounce<T>(
+  void Function(T) action, [
+  Duration wait = const Duration(milliseconds: 250),
+]);
 
 bool isEmail(String value);
 
 String formatCurrency(
   num amount, {
   String currency = "EUR",
-  String locale = "es_ES",
+  String locale = "en-US",
 });
 ```
 

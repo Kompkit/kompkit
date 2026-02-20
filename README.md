@@ -1,6 +1,6 @@
 # KompKit
 
-[![Version](https://img.shields.io/badge/version-0.1.0--alpha-orange.svg)](https://github.com/Kompkit/KompKit/releases)
+[![Version](https://img.shields.io/badge/version-0.2.0--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
 [![Web CI](https://github.com/Kompkit/KompKit/actions/workflows/web.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/web.yml)
 [![Kotlin CI](https://github.com/Kompkit/KompKit/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/android.yml)
 [![Flutter CI](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml)
@@ -9,9 +9,37 @@
 [![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white)](https://dart.dev/)
 
-> **⚠️ Alpha Release**: This is an early alpha version. APIs may change before stable release.
+> **⚠️ Alpha Release**: This is an early alpha version. APIs may change before stable release. See [Stability Policy](#stability-policy) below.
 
-A lightweight cross-platform utility kit providing essential functions for Web (TypeScript), Android (Kotlin), and Flutter (Dart) development. Built as a monorepo with identical APIs across platforms.
+A lightweight cross-platform utility kit providing essential functions for Web (TypeScript), Android (Kotlin), and Flutter (Dart) development. Built as a monorepo with conceptual API parity across platforms.
+
+## Why KompKit?
+
+Most utility libraries are platform-specific. When you build a product across Web, Android, and Flutter, you end up with three different utility ecosystems, three different mental models, and three different sets of edge-case behaviors.
+
+KompKit solves this by providing the same utilities — with the same names, the same defaults, and the same behavioral semantics — across all three platforms. You learn the API once. You use it everywhere.
+
+**What it is:**
+
+- A small, focused set of production-safe utility functions
+- Conceptually identical across TypeScript, Kotlin, and Dart
+- Idiomatic per platform — no forced unnatural APIs
+- Minimal dependencies, no runtime bloat
+
+**What it is not:**
+
+- A replacement for lodash, Kotlin stdlib, or Dart's core libraries
+- A UI component library
+- A framework or abstraction layer
+
+## Target Audience
+
+KompKit is for teams and developers who:
+
+- Build products across **multiple platforms simultaneously** (e.g., a web app + Android app + Flutter app)
+- Want **consistent utility behavior** without maintaining separate implementations per platform
+- Value **minimal dependencies** and **predictable APIs**
+- Are comfortable with alpha software and want to shape the API before 1.0
 
 ## Overview
 
@@ -191,6 +219,28 @@ KompKit/
   - TypeScript 5.7+
   - Kotlin 2.3+
   - Dart 3.0+
+
+## Stability Policy
+
+KompKit is currently in **alpha**. This means:
+
+- **APIs may change** between alpha versions without a deprecation period.
+- **Pin to exact versions** in production: `"kompkit-core": "0.2.0-alpha.0"` / `kompkit_core: 0.2.0-alpha.0`.
+- **Breaking changes** will be documented in [CHANGELOG.md](./docs/CHANGELOG.md) with migration notes.
+- Once `1.0.0` is released, the project will follow strict [Semantic Versioning](https://semver.org/): breaking changes only in major versions.
+
+## Platform Differences
+
+KompKit aims for **conceptual parity**, not syntactic identity. The following differences are intentional and documented:
+
+| Utility          | Platform | Difference                                                     | Reason                                                      |
+| ---------------- | -------- | -------------------------------------------------------------- | ----------------------------------------------------------- |
+| `debounce`       | Kotlin   | Requires `CoroutineScope` parameter                            | Structured concurrency — no global timer API on JVM         |
+| `debounce`       | Kotlin   | Action is first parameter, scope is last                       | Enables idiomatic trailing lambda syntax                    |
+| `formatCurrency` | Kotlin   | Accepts `String` locale, converts to `Locale` internally       | JVM `NumberFormat` requires `java.util.Locale`              |
+| `formatCurrency` | Dart     | Accepts BCP 47 locale, normalizes hyphen→underscore internally | `intl` package uses underscore-separated locale identifiers |
+
+All platforms accept BCP 47 locale strings (e.g., `"en-US"`). All platforms throw on invalid `currency` or `locale` inputs.
 
 ## Contributing
 

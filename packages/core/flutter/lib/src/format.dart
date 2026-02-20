@@ -1,61 +1,46 @@
 import 'package:intl/intl.dart';
 
-/// Formats a number as a localized currency string.
-/// 
-/// This function uses the Dart `intl` package to format numbers according to
-/// the specified currency and locale conventions. It handles decimal places,
-/// thousands separators, and currency symbols based on the locale.
-/// 
-/// The function automatically determines the appropriate currency symbol and
-/// formatting rules for the given locale. If an unsupported locale/currency
-/// combination is provided, it falls back gracefully.
-/// 
+/// Formats a number as a localized currency string using BCP 47 locale identifiers.
+///
+/// Accepts BCP 47 locale strings (e.g., `"en-US"`, `"es-ES"`, `"ja-JP"`).
+/// The `intl` package uses underscore-separated locale identifiers internally;
+/// hyphens are converted automatically.
+///
+/// Throws [ArgumentError] if [currency] is not a valid ISO 4217 code or
+/// [locale] is not a recognized locale — consistent with TypeScript and Kotlin behavior.
+///
 /// **Parameters:**
 /// - [amount] - The numeric amount to format (supports both int and double)
-/// - [currency] - The ISO 4217 currency code (e.g., "USD", "EUR", "JPY"). Defaults to "EUR"
-/// - [locale] - The locale identifier (e.g., "en_US", "es_ES", "ja_JP"). Defaults to "es_ES"
-/// 
+/// - [currency] - ISO 4217 currency code (e.g., "USD", "EUR", "JPY"). Defaults to "EUR"
+/// - [locale] - BCP 47 locale string (e.g., "en-US", "es-ES", "ja-JP"). Defaults to "en-US"
+///
 /// **Returns:** A formatted currency string according to the specified locale
-/// 
+/// @throws [ArgumentError] if [currency] or [locale] is invalid.
+///
 /// **Example:**
 /// ```dart
-/// // Default (EUR, Spanish locale)
-/// formatCurrency(1234.56);                                    // "1.234,56 €"
-/// 
-/// // US Dollar
-/// formatCurrency(1234.56, currency: "USD", locale: "en_US");  // "$1,234.56"
-/// 
-/// // Japanese Yen (no decimal places)
-/// formatCurrency(1000, currency: "JPY", locale: "ja_JP");     // "¥1,000"
-/// 
-/// // British Pound
-/// formatCurrency(999.99, currency: "GBP", locale: "en_GB");   // "£999.99"
-/// 
-/// // Negative amounts
-/// formatCurrency(-50.25, currency: "USD", locale: "en_US");   // "-$50.25"
+/// formatCurrency(1234.56);                                    // "$1,234.56" (en-US default)
+/// formatCurrency(1234.56, currency: "EUR", locale: "es-ES"); // "1.234,56 €"
+/// formatCurrency(1000, currency: "JPY", locale: "ja-JP");    // "¥1,000"
+/// formatCurrency(999.99, currency: "GBP", locale: "en-GB");  // "£999.99"
+/// formatCurrency(-50.25, currency: "USD", locale: "en-US");  // "-$50.25"
 /// ```
 String formatCurrency(
   num amount, {
   String currency = "EUR",
-  String locale = "es_ES",
+  String locale = "en-US",
 }) {
+  // Normalize BCP 47 hyphen separator to the underscore format expected by intl.
+  final normalizedLocale = locale.replaceAll('-', '_');
   try {
     final formatter = NumberFormat.currency(
-      locale: locale,
+      locale: normalizedLocale,
       name: currency,
     );
     return formatter.format(amount);
+  } on ArgumentError {
+    rethrow;
   } catch (e) {
-    // Fallback to a basic format if locale/currency combination is not supported
-    try {
-      final fallbackFormatter = NumberFormat.currency(
-        locale: 'en_US',
-        name: currency,
-      );
-      return fallbackFormatter.format(amount);
-    } catch (e2) {
-      // Ultimate fallback: just return the number with currency code
-      return '$currency${amount.toStringAsFixed(2)}';
-    }
+    throw ArgumentError('Invalid currency "$currency" or locale "$locale": $e');
   }
 }

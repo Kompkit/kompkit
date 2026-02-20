@@ -111,7 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known Limitations
 
 - **Alpha release**: APIs may change before stable 1.0 release
-- **Local development only**: Packages not yet published to registries
+- **Android not yet published**: Android/Kotlin package is not yet published to Maven; use local project reference
 - **Limited utility set**: Only 3 core functions (debounce, isEmail, formatCurrency)
 
 ### Migration Notes

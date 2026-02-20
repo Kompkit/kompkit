@@ -88,7 +88,7 @@ test(web): add edge cases for email validation
 npm run build
 
 # Build web package only
-npm run docs:web
+npm run build:web
 
 # Build Kotlin package only
 cd packages/core/android && ./gradlew assemble
@@ -169,7 +169,7 @@ When adding a new utility function:
 
 4. **Update exports**:
    - Add to `packages/core/web/src/index.ts`
-   - Add to `packages/core/flutter/src/kompkit_core.dart`
+   - Add to `packages/core/flutter/lib/kompkit_core.dart`
    - Kotlin exports are automatic via package structure
 
 5. **Document with examples**:
@@ -266,6 +266,8 @@ Releases are managed by maintainers:
 - 🐛 **Issues**: [GitHub Issues](https://github.com/Kompkit/KompKit/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/Kompkit/KompKit/discussions)
 - 📧 **Maintainers**: Open an issue for direct contact
+
+> See also: [CONTRIBUTING.md](../docs/CONTRIBUTING.md) is auto-linked by GitHub in the PR interface.
 
 ## Code of Conduct
 
