@@ -3,21 +3,25 @@ import '../lib/src/validate.dart';
 
 void main() {
   group('isEmail', () {
-    test('should return true for valid email addresses', () {
+    test('returns true for valid email addresses', () {
       expect(isEmail('user@example.com'), true);
-      expect(isEmail('test@example.com'), true);
-      expect(isEmail('test.email@domain.org'), true);
+      expect(isEmail('test.email+tag@domain.org'), true);
+      expect(isEmail('a@b.co'), true);
     });
 
-    test('should return false for invalid email addresses', () {
-      expect(isEmail(''), false);
-      expect(isEmail('invalid'), false);
+    test('returns false for invalid email addresses', () {
       expect(isEmail('invalid@'), false);
       expect(isEmail('@invalid.com'), false);
-      expect(isEmail('invalid@com'), false);
+      expect(isEmail('nodomain'), false);
+      expect(isEmail('missing@tld'), false);
+      expect(isEmail('two@@domain.com'), false);
     });
 
-    test('should handle whitespace by trimming', () {
+    test('returns false for empty string', () {
+      expect(isEmail(''), false);
+    });
+
+    test('trims whitespace before validating', () {
       expect(isEmail('  user@example.com  '), true);
       expect(isEmail('  invalid@  '), false);
     });

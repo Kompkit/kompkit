@@ -21,6 +21,7 @@ function SearchComponent() {
     }, 400);
 
     search(query);
+    return () => search.cancel(); // cleanup on unmount or query change
   }, [query]);
 
   return (
@@ -56,13 +57,13 @@ fun SearchScreen() {
     val scope = rememberCoroutineScope()
 
     val search = remember {
-        debounce<String>(400L, scope) { q ->
+        debounce<String>({ q ->
             scope.launch {
                 if (q.isNotEmpty()) {
                     results = fetchResults(q)
                 }
             }
-        }
+        }, waitMs = 400L, scope = scope)
     }
 
     Column {
@@ -101,7 +102,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
-  late final Function(String) _debouncedSearch;
+  late final Debounced<String> _debouncedSearch;
   List<String> _results = [];
 
   @override
@@ -114,6 +115,12 @@ class _SearchScreenState extends State<SearchScreen> {
         _results = results;
       });
     }, const Duration(milliseconds: 400));
+  }
+
+  @override
+  void dispose() {
+    _debouncedSearch.cancel();
+    super.dispose();
   }
 
   Future<List<String>> _fetchResults(String query) async {
@@ -169,7 +176,7 @@ function PriceDisplay({ amount }: { amount: number }) {
     "en-US": { currency: "USD", locale: "en-US" },
     "es-ES": { currency: "EUR", locale: "es-ES" },
     "ja-JP": { currency: "JPY", locale: "ja-JP" },
-  };
+  } as const;
 
   const config = localeConfig[locale];
   const formatted = formatCurrency(amount, config.currency, config.locale);
@@ -239,12 +246,12 @@ class PriceDisplay extends StatefulWidget {
 }
 
 class _PriceDisplayState extends State<PriceDisplay> {
-  String _selectedLocale = 'en_US';
+  String _selectedLocale = 'en-US';
 
   final Map<String, Map<String, String>> _localeConfig = {
-    'en_US': {'currency': 'USD', 'locale': 'en_US'},
-    'es_ES': {'currency': 'EUR', 'locale': 'es_ES'},
-    'ja_JP': {'currency': 'JPY', 'locale': 'ja_JP'},
+    'en-US': {'currency': 'USD', 'locale': 'en-US'},
+    'es-ES': {'currency': 'EUR', 'locale': 'es-ES'},
+    'ja-JP': {'currency': 'JPY', 'locale': 'ja-JP'},
   };
 
   @override
@@ -259,7 +266,7 @@ class _PriceDisplayState extends State<PriceDisplay> {
     return Column(
       children: [
         Text(
-          'Price: $formatted',
+          'Price: \$formatted',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         SizedBox(height: 16),

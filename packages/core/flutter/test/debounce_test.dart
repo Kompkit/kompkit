@@ -3,77 +3,81 @@ import '../lib/src/debounce.dart';
 
 void main() {
   group('debounce', () {
-    test('should delay function execution', () async {
+    test('does not call the action immediately', () async {
       var callCount = 0;
-      final debouncedFn = debounce<String>((String value) {
+      final fn = debounce<String>((String value) {
         callCount++;
       }, const Duration(milliseconds: 100));
 
-      debouncedFn('test');
+      fn('test');
       expect(callCount, 0);
+    });
 
+    test('calls the action after the wait period', () async {
+      var callCount = 0;
+      final fn = debounce<String>((String value) {
+        callCount++;
+      }, const Duration(milliseconds: 100));
+
+      fn('test');
       await Future.delayed(const Duration(milliseconds: 150));
       expect(callCount, 1);
     });
 
-    test('should cancel previous calls when called multiple times', () async {
+    test('only calls once for multiple rapid calls (debounce behavior)', () async {
       var callCount = 0;
       String? lastValue;
-      final debouncedFn = debounce<String>((String value) {
+      final fn = debounce<String>((String value) {
         callCount++;
         lastValue = value;
       }, const Duration(milliseconds: 100));
 
-      debouncedFn('first');
-      debouncedFn('second');
-      debouncedFn('third');
+      fn('first');
+      fn('second');
+      fn('third');
 
       await Future.delayed(const Duration(milliseconds: 150));
       expect(callCount, 1);
       expect(lastValue, 'third');
     });
 
-    test('should use default wait time of 250ms', () async {
+    test('uses 250ms default wait when not specified', () async {
       var callCount = 0;
-      final debouncedFn = debounce<String>((String value) {
-        callCount++;
-      });
+      final fn = debounce<String>((String value) => callCount++);
 
-      debouncedFn('test');
-      
-      // Should not execute before 250ms
+      fn('test');
       await Future.delayed(const Duration(milliseconds: 200));
       expect(callCount, 0);
 
-      // Should execute after 250ms
       await Future.delayed(const Duration(milliseconds: 100));
       expect(callCount, 1);
     });
-  });
 
-  group('debounceVoid', () {
-    test('should delay void function execution', () async {
+    test('cancel() prevents the pending call from executing', () async {
       var callCount = 0;
-      final debouncedFn = debounceVoid(() {
-        callCount++;
-      }, const Duration(milliseconds: 100));
+      final fn = debounce<String>((String value) => callCount++,
+          const Duration(milliseconds: 100));
 
-      debouncedFn();
-      expect(callCount, 0);
+      fn('test');
+      fn.cancel();
 
       await Future.delayed(const Duration(milliseconds: 150));
-      expect(callCount, 1);
+      expect(callCount, 0);
     });
 
-    test('should cancel previous void calls when called multiple times', () async {
-      var callCount = 0;
-      final debouncedFn = debounceVoid(() {
-        callCount++;
-      }, const Duration(milliseconds: 100));
+    test('cancel() is safe to call when no call is pending', () {
+      final fn = debounce<String>((String value) {});
+      expect(() => fn.cancel(), returnsNormally);
+    });
 
-      debouncedFn();
-      debouncedFn();
-      debouncedFn();
+    test('void action works via debounce<void>', () async {
+      var callCount = 0;
+      final fn = debounce<void>((_) => callCount++,
+          const Duration(milliseconds: 100));
+
+      fn(null);
+      fn(null);
+      fn(null);
 
       await Future.delayed(const Duration(milliseconds: 150));
       expect(callCount, 1);
