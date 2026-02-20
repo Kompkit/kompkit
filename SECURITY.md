@@ -4,7 +4,7 @@
 
 | Version         | Supported              |
 | --------------- | ---------------------- |
-| `0.3.0-alpha.0` | ✅ Current             |
+| `0.3.0-alpha.1` | ✅ Current             |
 | `0.2.0-alpha.0` | ❌ No longer supported |
 | `0.1.0-alpha`   | ❌ No longer supported |
 

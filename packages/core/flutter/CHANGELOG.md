@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0-alpha.0
+## 0.3.0-alpha.1
 
 - Initial alpha release of `kompkit_core` for Flutter/Dart
 - **debounce** — Delay function execution with cancellation (`debounce<T>`, `debounceVoid`)
