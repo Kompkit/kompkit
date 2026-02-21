@@ -56,11 +56,12 @@ npm run test
 
 ## Utilities
 
-| Utility          | Description                                              |
-| ---------------- | -------------------------------------------------------- |
-| `debounce`       | Debounce a function call by a delay.                     |
-| `isEmail`        | Validate a string with a basic email regex.              |
-| `formatCurrency` | Format numbers into a localized currency string.         |
-| `clamp`          | Constrain a number within an inclusive [min, max] range. |
+| Utility          | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `debounce`       | Debounce a function call by a delay.                      |
+| `isEmail`        | Validate a string with a basic email regex.               |
+| `formatCurrency` | Format numbers into a localized currency string.          |
+| `clamp`          | Constrain a number within an inclusive [min, max] range.  |
+| `throttle`       | Limit a function to execute at most once per wait period. |
 
 Next: read the detailed guides for [Web](./web.md), [Android](./android.md), [Flutter](./flutter.md), and the [Recipes](./recipes.md).

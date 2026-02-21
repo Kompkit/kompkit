@@ -61,6 +61,7 @@ KompKit provides essential utility functions that work seamlessly across Web (Ty
 - **📧 isEmail** - Validate email addresses with robust regex patterns
 - **💰 formatCurrency** - Format numbers as currency with full locale support
 - **📐 clamp** - Constrain a number within an inclusive [min, max] range
+- **⏱️ throttle** - Limit a function to execute at most once per wait period
 
 ### Key Features
 

@@ -15,13 +15,25 @@ npm i kompkit-core
 ESM:
 
 ```ts
-import { debounce, isEmail, formatCurrency, clamp } from "kompkit-core";
+import {
+  debounce,
+  isEmail,
+  formatCurrency,
+  clamp,
+  throttle,
+} from "kompkit-core";
 ```
 
 CommonJS:
 
 ```js
-const { debounce, isEmail, formatCurrency, clamp } = require("kompkit-core");
+const {
+  debounce,
+  isEmail,
+  formatCurrency,
+  clamp,
+  throttle,
+} = require("kompkit-core");
 ```
 
 ## Usage examples
@@ -66,6 +78,19 @@ import { clamp } from "kompkit-core";
 clamp(5, 0, 10); // 5
 clamp(-3, 0, 10); // 0
 clamp(15, 0, 10); // 10
+```
+
+### throttle
+
+```ts
+import { throttle } from "kompkit-core";
+
+const onScroll = throttle(() => {
+  console.log("scroll");
+}, 200);
+
+window.addEventListener("scroll", onScroll);
+onScroll.cancel(); // reset state (e.g. on unmount)
 ```
 
 ## React snippet

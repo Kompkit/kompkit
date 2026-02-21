@@ -30,6 +30,11 @@ print(formatCurrency(1234.56)); // "$1,234.56" (en-US / USD default)
 
 // Clamp a value
 print(clamp(15.0, 0.0, 10.0)); // 10.0
+
+// Throttle a function
+final onScroll = throttle<double>((offset) => print(offset),
+                                  const Duration(milliseconds: 200));
+onScroll.cancel(); // reset state
 ```
 
 ## Documentation

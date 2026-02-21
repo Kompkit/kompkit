@@ -177,6 +177,28 @@ double opacity = clamp(userInput, 0.0, 1.0);
 double scrollOffset = clamp(rawOffset, 0.0, maxScrollExtent);
 ```
 
+### Throttle
+
+Limit a function to execute at most once per wait duration. The first call executes immediately; subsequent calls within the wait period are ignored.
+
+```dart
+final onScroll = throttle<void>((_) {
+  print('scroll event');
+}, const Duration(milliseconds: 200));
+
+onScroll(null);    // executes immediately
+onScroll(null);    // ignored within 200ms
+onScroll.cancel(); // reset state (e.g. in dispose())
+```
+
+Useful for scroll listeners, resize handlers, or any high-frequency event:
+
+```dart
+final onResize = throttle<Size>((size) {
+  setState(() => _size = size);
+}, const Duration(milliseconds: 100));
+```
+
 #### Flutter Widget Example
 
 ```dart
@@ -330,6 +352,7 @@ KompKit Core for Flutter/Dart works on:
 - **Email Validation**: Compiled regex for fast validation
 - **Currency Formatting**: Leverages Dart's `intl` package for optimal localization
 - **Clamp**: Pure arithmetic — zero overhead
+- **Throttle**: Uses Dart's `Timer` class — same mechanism as debounce
 
 ## Next Steps
 

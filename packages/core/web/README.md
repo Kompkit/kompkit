@@ -92,6 +92,34 @@ function clamp(value: number, min: number, max: number): number;
 
 ---
 
+### `throttle`
+
+Limits a function to execute at most once per `wait` milliseconds. The first call executes immediately; subsequent calls within the wait period are ignored.
+
+```ts
+import { throttle } from "kompkit-core";
+
+const onScroll = throttle(() => {
+  console.log("scroll:", window.scrollY);
+}, 200);
+
+window.addEventListener("scroll", onScroll);
+onScroll.cancel(); // reset state (e.g. on component unmount)
+```
+
+**Signature:**
+
+```ts
+function throttle<T extends (...args: any[]) => void>(
+  fn: T,
+  wait: number,
+): T & { cancel(): void };
+```
+
+- Throws `Error` if `wait <= 0`
+
+---
+
 ### `formatCurrency`
 
 Formats a number as a localized currency string using `Intl.NumberFormat`.

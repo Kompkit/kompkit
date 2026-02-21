@@ -290,6 +290,84 @@ class _PriceDisplayState extends State<PriceDisplay> {
 }
 ```
 
+## Throttled scroll handler (TypeScript)
+
+```ts
+import { throttle } from "kompkit-core";
+
+const onScroll = throttle(() => {
+  console.log("scroll position:", window.scrollY);
+}, 200);
+
+window.addEventListener("scroll", onScroll);
+
+// On cleanup:
+onScroll.cancel();
+window.removeEventListener("scroll", onScroll);
+```
+
+## Throttled event handler (Kotlin)
+
+```kotlin
+import com.kompkit.core.throttle
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+
+val scope = CoroutineScope(Dispatchers.Main)
+val onSensorUpdate = throttle<Float>(100L, scope) { value ->
+    updateUI(value)
+}
+
+// In sensor callback:
+onSensorUpdate(sensorValue)
+
+// On cleanup:
+onSensorUpdate.cancel()
+```
+
+## Throttled scroll listener (Flutter)
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:kompkit_core/kompkit_core.dart';
+
+class ScrollTracker extends StatefulWidget {
+  @override
+  _ScrollTrackerState createState() => _ScrollTrackerState();
+}
+
+class _ScrollTrackerState extends State<ScrollTracker> {
+  final _controller = ScrollController();
+  late final Throttled<double> _throttledScroll;
+
+  @override
+  void initState() {
+    super.initState();
+    _throttledScroll = throttle<double>(
+      (offset) => print('scroll: $offset'),
+      const Duration(milliseconds: 200),
+    );
+    _controller.addListener(() => _throttledScroll(_controller.offset));
+  }
+
+  @override
+  void dispose() {
+    _throttledScroll.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      controller: _controller,
+      itemCount: 100,
+      itemBuilder: (_, i) => ListTile(title: Text('Item $i')),
+    );
+  }
+}
+```
+
 ## Clamping a slider value (TypeScript / React)
 
 ```tsx

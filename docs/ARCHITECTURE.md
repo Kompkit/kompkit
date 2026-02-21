@@ -46,6 +46,7 @@ All modules implement identical functionality:
 - **isEmail**: Email validation using regex patterns
 - **formatCurrency**: Localized currency formatting
 - **clamp**: Constrain a number within an inclusive [min, max] range
+- **throttle**: Limit function execution to at most once per wait period
 
 ## API Parity Contract
 
@@ -53,7 +54,7 @@ This section defines the formal contract for cross-platform API consistency in K
 
 ### What is Guaranteed
 
-- **Function names** are identical across all platforms (`debounce`, `isEmail`, `formatCurrency`, `clamp`).
+- **Function names** are identical across all platforms (`debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle`).
 - **Behavioral semantics** are identical: given the same inputs, all platforms produce the same observable output.
 - **Default values** are identical: `wait = 250ms`, `currency = "USD"`, `locale = "en-US"`.
 - **Error handling philosophy** is consistent: invalid inputs that cannot produce a meaningful result throw/throw-equivalent errors. Silent fallbacks are not permitted.
@@ -75,6 +76,7 @@ debounce(action, options)         → Debounced<T>  (with .cancel())
 isEmail(value)                    → Boolean
 formatCurrency(amount, options)   → String
 clamp(value, min, max)            → Number
+throttle(fn, wait)                → Throttled<T>  (with .cancel())
 ```
 
 A developer familiar with the TypeScript API should be able to use the Kotlin or Dart API with only idiomatic adjustments — not conceptual re-learning.
@@ -127,6 +129,16 @@ export function formatCurrency(
 ): string;
 
 export function clamp(value: number, min: number, max: number): number;
+
+export interface Throttled<T extends (...args: any[]) => void> {
+  (...args: Parameters<T>): void;
+  cancel(): void;
+}
+
+export function throttle<T extends (...args: any[]) => void>(
+  fn: T,
+  wait: number, // must be > 0
+): Throttled<T>;
 ```
 
 **Kotlin:**
@@ -152,6 +164,17 @@ fun formatCurrency(
 ): String
 
 fun clamp(value: Double, min: Double, max: Double): Double
+
+class Throttled<T>(private val invoke: (T) -> Unit) {
+  operator fun invoke(value: T): Unit
+  fun cancel(): Unit
+}
+
+fun <T> throttle(
+  waitMs: Long,           // must be > 0
+  scope: CoroutineScope,  // platform constraint: structured concurrency
+  action: (T) -> Unit,
+): Throttled<T>
 ```
 
 **Dart:**
@@ -176,6 +199,16 @@ String formatCurrency(
 });
 
 double clamp(double value, double min, double max);
+
+class Throttled<T> {
+  void call(T arg);
+  void cancel();
+}
+
+Throttled<T> throttle<T>(
+  void Function(T) fn,
+  Duration wait, // must be > Duration.zero
+);
 ```
 
 ### Platform-Specific Adaptations
@@ -189,6 +222,7 @@ While maintaining API consistency, we leverage platform strengths:
 - **Intl.NumberFormat** for currency formatting
 - **RegExp** for email validation
 - **Math.min/Math.max** for clamp
+- **setTimeout/clearTimeout** for throttle timer
 
 #### Kotlin Implementation
 
@@ -197,6 +231,7 @@ While maintaining API consistency, we leverage platform strengths:
 - **NumberFormat/Currency** for localized formatting
 - **Regex** for email validation
 - **Double.coerceIn** for clamp
+- **Coroutine delay + Job** for throttle wait period
 
 #### Dart/Flutter Implementation
 
@@ -205,6 +240,7 @@ While maintaining API consistency, we leverage platform strengths:
 - **RegExp** for email validation
 - **Null safety** with full type-safe APIs
 - **num.clamp** for clamp
+- **Timer** for throttle scheduling (same as debounce)
 
 ## Build System Architecture
 
@@ -284,17 +320,19 @@ android.yml:
 ```
 packages/core/web/tests/
 ├── core.test.ts              # debounce, isEmail, formatCurrency tests
-└── clamp.test.ts             # clamp unit tests
+├── clamp.test.ts             # clamp unit tests
+└── throttle.test.ts          # throttle unit tests
 
 packages/core/android/src/test/kotlin/com/kompkit/core/
-└── CoreTests.kt              # All utility tests (incl. ClampTests)
+└── CoreTests.kt              # All utility tests (incl. ThrottleTests, ClampTests)
 
 packages/core/flutter/test/
 ├── kompkit_core_test.dart     # Integration tests
 ├── debounce_test.dart         # Debounce unit tests
 ├── validate_test.dart         # Validation unit tests
 ├── format_test.dart           # Formatting unit tests
-└── clamp_test.dart            # Clamp unit tests
+├── clamp_test.dart            # Clamp unit tests
+└── throttle_test.dart         # Throttle unit tests
 ```
 
 ### Test Coverage

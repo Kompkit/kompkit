@@ -31,6 +31,7 @@ import com.kompkit.core.debounce
 import com.kompkit.core.isEmail
 import com.kompkit.core.formatCurrency
 import com.kompkit.core.clamp
+import com.kompkit.core.throttle
 ```
 
 ## Usage examples
@@ -80,6 +81,23 @@ clamp(-3.0, 0.0, 10.0)  // 0.0
 clamp(15.0, 0.0, 10.0)  // 10.0
 ```
 
+### throttle
+
+```kotlin
+import com.kompkit.core.throttle
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+
+val scope = CoroutineScope(Dispatchers.Main)
+val onScroll = throttle<Unit>(200L, scope) {
+    println("scroll event")
+}
+
+onScroll(Unit)    // executes immediately
+onScroll(Unit)    // ignored within 200ms
+onScroll.cancel() // reset state
+```
+
 ## Jetpack Compose integration
 
 ```kotlin
@@ -111,7 +129,7 @@ fun SearchBox() {
 
 ## Notes
 
-- Requires `kotlinx-coroutines-core` for the `debounce` utility.
+- Requires `kotlinx-coroutines-core` for the `debounce` and `throttle` utilities.
 - All utilities are top-level functions in the `com.kompkit.core` package.
 - `formatCurrency` accepts a BCP 47 locale string (e.g., `"en-US"`) — no `java.util.Locale` needed.
 - Compatible with Android API 21+.
