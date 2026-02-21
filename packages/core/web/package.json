@@ -1,6 +1,6 @@
 {
   "name": "kompkit-core",
-  "version": "0.3.0-alpha.1",
+  "version": "0.3.1-alpha.0",
   "description": "Cross-platform utility functions for web applications. Part of the KompKit ecosystem.",
   "type": "module",
   "main": "dist/index.cjs",

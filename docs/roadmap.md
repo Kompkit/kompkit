@@ -1,6 +1,6 @@
 # Roadmap
 
-## Current State — `0.3.0-alpha.1`
+## Current State — `0.3.1-alpha.0`
 
 KompKit Core is in early alpha. The current release includes:
 
@@ -10,7 +10,7 @@ KompKit Core is in early alpha. The current release includes:
 - **Full CI/CD** with path-based workflow optimization
 - **Cancel support** on `debounce` across all platforms
 
-## Next: `0.3.0-alpha`
+## Next: `0.3.1-alpha`
 
 Focus: utility expansion and Android publishing.
 

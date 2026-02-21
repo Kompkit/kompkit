@@ -42,7 +42,7 @@ class FormatCurrencyTests {
   fun defaultLocaleIsEnUs() {
     val result = formatCurrency(1234.56)
     assertTrue(result.contains("1,234.56"), "Expected en-US formatted number, got: $result")
-    assertTrue(result.contains("€"), "Expected EUR symbol, got: $result")
+    assertTrue(result.contains("$"), "Expected USD symbol, got: $result")
   }
 
   @Test
@@ -80,6 +80,17 @@ class FormatCurrencyTests {
   @Test
   fun throwsForInvalidCurrency() {
     assertFailsWith<IllegalArgumentException> { formatCurrency(100.0, "INVALID", "en-US") }
+  }
+
+  @Test
+  fun throwsForNaNAmount() {
+    assertFailsWith<IllegalArgumentException> { formatCurrency(Double.NaN) }
+  }
+
+  @Test
+  fun throwsForInfinityAmount() {
+    assertFailsWith<IllegalArgumentException> { formatCurrency(Double.POSITIVE_INFINITY) }
+    assertFailsWith<IllegalArgumentException> { formatCurrency(Double.NEGATIVE_INFINITY) }
   }
 
   @Test

@@ -2,7 +2,7 @@
 
 This guide covers using KompKit Core utilities in Flutter and Dart applications.
 
-Status: `V0.3.0-alpha`.
+Status: `V0.3.1-alpha`.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Add KompKit Core to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.3.0-alpha.1
+  kompkit_core: ^0.3.1-alpha.0
 ```
 
 Then run:
@@ -29,7 +29,7 @@ For server-side Dart projects, add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.3.0-alpha.1
+  kompkit_core: ^0.3.1-alpha.0
 ```
 
 Then run:

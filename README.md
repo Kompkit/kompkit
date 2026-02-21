@@ -1,6 +1,6 @@
 # KompKit
 
-[![Version](https://img.shields.io/badge/version-0.3.0--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
+[![Version](https://img.shields.io/badge/version-0.3.1--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
 [![Web CI](https://github.com/Kompkit/KompKit/actions/workflows/web.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/web.yml)
 [![Kotlin CI](https://github.com/Kompkit/KompKit/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/android.yml)
 [![Flutter CI](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml)
@@ -95,7 +95,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.3.0-alpha.1
+  kompkit_core: ^0.3.1-alpha.0
 ```
 
 Then run:
@@ -211,7 +211,7 @@ KompKit/
 
 ## Version Information
 
-- **Current Version**: `0.3.0-alpha`
+- **Current Version**: `0.3.1-alpha`
 - **Minimum Requirements**:
   - Node.js 20+ (Web)
   - JDK 17+ (Android)
@@ -225,7 +225,7 @@ KompKit/
 KompKit is currently in **alpha**. This means:
 
 - **APIs may change** between alpha versions without a deprecation period.
-- **Pin to exact versions** in production: `"kompkit-core": "0.3.0-alpha.1"` / `kompkit_core: 0.3.0-alpha.1`.
+- **Pin to exact versions** in production: `"kompkit-core": "0.3.1-alpha.0"` / `kompkit_core: 0.3.1-alpha.0`.
 - **Breaking changes** will be documented in [CHANGELOG.md](./docs/CHANGELOG.md) with migration notes.
 - Once `1.0.0` is released, the project will follow strict [Semantic Versioning](https://semver.org/): breaking changes only in major versions.
 

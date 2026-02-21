@@ -3,10 +3,10 @@ import '../lib/src/format.dart';
 
 void main() {
   group('formatCurrency', () {
-    test('default locale is en-US with EUR', () {
+    test('default locale is en-US with USD', () {
       final result = formatCurrency(1234.56);
       expect(result, contains('1,234.56'));
-      expect(result, contains('EUR'));
+      expect(result, contains('USD'));
     });
 
     test('formats USD with en-US locale using BCP 47 string', () {
@@ -51,6 +51,24 @@ void main() {
     test('throws ArgumentError for invalid currency code', () {
       expect(
         () => formatCurrency(100, currency: 'INVALID', locale: 'en-US'),
+        throwsArgumentError,
+      );
+    });
+
+    test('throws ArgumentError for NaN amount', () {
+      expect(
+        () => formatCurrency(double.nan),
+        throwsArgumentError,
+      );
+    });
+
+    test('throws ArgumentError for Infinity amount', () {
+      expect(
+        () => formatCurrency(double.infinity),
+        throwsArgumentError,
+      );
+      expect(
+        () => formatCurrency(double.negativeInfinity),
         throwsArgumentError,
       );
     });

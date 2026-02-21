@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1-alpha.0] - 2026-02-20
+
+### Changed
+
+- **`formatCurrency` default currency**: Changed from `EUR` to `USD` across all platforms (TypeScript, Kotlin, Dart)
+- **`formatCurrency` finite validation**: Added validation that throws on `NaN` and `Infinity` amounts across all platforms
+  - TypeScript: throws `RangeError`
+  - Kotlin: throws `IllegalArgumentException`
+  - Dart: throws `ArgumentError`
+- **Documentation**: Corrected `formatCurrency` examples to reflect `USD` default
+- **Documentation**: Added Platform Differences section to npm README documenting Dart single-argument debounce limitation and other divergences
+- **Packaging**: Clarified that `kompkit-core` ships both ESM and CommonJS builds (not ESM-only)
+
+### Fixed
+
+- Documentation inconsistency where examples showed `USD` but default was `EUR`
+
 ## [0.3.0-alpha] - 2026-02-09
 
 ### Changed
