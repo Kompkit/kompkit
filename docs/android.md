@@ -30,6 +30,7 @@ dependencies {
 import com.kompkit.core.debounce
 import com.kompkit.core.isEmail
 import com.kompkit.core.formatCurrency
+import com.kompkit.core.clamp
 ```
 
 ## Usage examples
@@ -64,10 +65,19 @@ isEmail("invalid@") // false
 
 ```kotlin
 import com.kompkit.core.formatCurrency
-import java.util.Locale
 
-formatCurrency(1234.56) // "1.234,56 €" (es-ES by default)
-formatCurrency(1234.56, "USD", Locale.US) // "$1,234.56"
+formatCurrency(1234.56) // "$1,234.56" (en-US / USD default)
+formatCurrency(1234.56, "EUR", "es-ES") // "1.234,56 €"
+```
+
+### clamp
+
+```kotlin
+import com.kompkit.core.clamp
+
+clamp(5.0, 0.0, 10.0)   // 5.0
+clamp(-3.0, 0.0, 10.0)  // 0.0
+clamp(15.0, 0.0, 10.0)  // 10.0
 ```
 
 ## Jetpack Compose integration
@@ -103,4 +113,5 @@ fun SearchBox() {
 
 - Requires `kotlinx-coroutines-core` for the `debounce` utility.
 - All utilities are top-level functions in the `com.kompkit.core` package.
+- `formatCurrency` accepts a BCP 47 locale string (e.g., `"en-US"`) — no `java.util.Locale` needed.
 - Compatible with Android API 21+.

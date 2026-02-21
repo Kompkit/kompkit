@@ -159,3 +159,77 @@ class DebounceTests {
     debounced.cancel() // should not throw
   }
 }
+
+class ClampTests {
+  @Test
+  fun returnsValueWhenWithinRange() {
+    assertEquals(5.0, clamp(5.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun returnsMinWhenBelowRange() {
+    assertEquals(0.0, clamp(-3.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun returnsMaxWhenAboveRange() {
+    assertEquals(10.0, clamp(15.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun returnsMinWhenValueEqualsMin() {
+    assertEquals(0.0, clamp(0.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun returnsMaxWhenValueEqualsMax() {
+    assertEquals(10.0, clamp(10.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun worksWithNegativeRange() {
+    assertEquals(-5.0, clamp(-5.0, -10.0, -1.0))
+    assertEquals(-1.0, clamp(0.0, -10.0, -1.0))
+    assertEquals(-10.0, clamp(-20.0, -10.0, -1.0))
+  }
+
+  @Test
+  fun worksWhenMinEqualsMax() {
+    assertEquals(3.0, clamp(5.0, 3.0, 3.0))
+  }
+
+  @Test
+  fun throwsWhenMinGreaterThanMax() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, 10.0, 0.0) }
+  }
+
+  @Test
+  fun throwsForNaNValue() {
+    assertFailsWith<IllegalArgumentException> { clamp(Double.NaN, 0.0, 10.0) }
+  }
+
+  @Test
+  fun throwsForNaNMin() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, Double.NaN, 10.0) }
+  }
+
+  @Test
+  fun throwsForNaNMax() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, 0.0, Double.NaN) }
+  }
+
+  @Test
+  fun throwsForInfinityValue() {
+    assertFailsWith<IllegalArgumentException> { clamp(Double.POSITIVE_INFINITY, 0.0, 10.0) }
+  }
+
+  @Test
+  fun throwsForInfinityMin() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, Double.POSITIVE_INFINITY, 10.0) }
+  }
+
+  @Test
+  fun throwsForInfinityMax() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, 0.0, Double.POSITIVE_INFINITY) }
+  }
+}

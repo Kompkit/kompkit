@@ -26,7 +26,10 @@ final search = debounce<String>((query) => print('Searching: $query'),
 print(isEmail('user@example.com')); // true
 
 // Format currency
-print(formatCurrency(1234.56, currency: 'USD', locale: 'en_US')); // "$1,234.56"
+print(formatCurrency(1234.56)); // "$1,234.56" (en-US / USD default)
+
+// Clamp a value
+print(clamp(15.0, 0.0, 10.0)); // 10.0
 ```
 
 ## Documentation

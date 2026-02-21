@@ -15,13 +15,13 @@ npm i kompkit-core
 ESM:
 
 ```ts
-import { debounce, isEmail, formatCurrency } from "kompkit-core";
+import { debounce, isEmail, formatCurrency, clamp } from "kompkit-core";
 ```
 
 CommonJS:
 
 ```js
-const { debounce, isEmail, formatCurrency } = require("kompkit-core");
+const { debounce, isEmail, formatCurrency, clamp } = require("kompkit-core");
 ```
 
 ## Usage examples
@@ -54,8 +54,18 @@ isEmail("invalid@"); // false
 ```ts
 import { formatCurrency } from "kompkit-core";
 
-formatCurrency(1234.56); // "1.234,56 €" (es-ES by default)
-formatCurrency(1234.56, "USD", "en-US"); // "$1,234.56"
+formatCurrency(1234.56); // "$1,234.56" (en-US / USD default)
+formatCurrency(1234.56, "EUR", "es-ES"); // "1.234,56 €"
+```
+
+### clamp
+
+```ts
+import { clamp } from "kompkit-core";
+
+clamp(5, 0, 10); // 5
+clamp(-3, 0, 10); // 0
+clamp(15, 0, 10); // 10
 ```
 
 ## React snippet

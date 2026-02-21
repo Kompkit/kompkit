@@ -290,6 +290,47 @@ class _PriceDisplayState extends State<PriceDisplay> {
 }
 ```
 
+## Clamping a slider value (TypeScript / React)
+
+```tsx
+import { clamp } from "kompkit-core";
+
+function VolumeSlider() {
+  const [volume, setVolume] = useState(50);
+
+  const handleChange = (raw: number) => {
+    setVolume(clamp(raw, 0, 100));
+  };
+
+  return (
+    <input
+      type="range"
+      value={volume}
+      onChange={(e) => handleChange(Number(e.target.value))}
+    />
+  );
+}
+```
+
+## Clamping a value (Kotlin)
+
+```kotlin
+import com.kompkit.core.clamp
+
+val volume = clamp(rawInput, 0.0, 100.0)
+val opacity = clamp(userValue, 0.0, 1.0)
+```
+
+## Clamping a value (Flutter)
+
+```dart
+import 'package:kompkit_core/kompkit_core.dart';
+
+final volume = clamp(rawInput, 0.0, 100.0);
+final opacity = clamp(userValue, 0.0, 1.0);
+final scrollOffset = clamp(rawOffset, 0.0, maxScrollExtent);
+```
+
 ## Email validation on form submission (Flutter)
 
 ```dart

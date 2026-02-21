@@ -69,6 +69,29 @@ function isEmail(value: string): boolean;
 
 ---
 
+### `clamp`
+
+Constrains a number within an inclusive `[min, max]` range.
+
+```ts
+import { clamp } from "kompkit-core";
+
+clamp(5, 0, 10); // 5
+clamp(-3, 0, 10); // 0
+clamp(15, 0, 10); // 10
+```
+
+**Signature:**
+
+```ts
+function clamp(value: number, min: number, max: number): number;
+```
+
+- Throws `RangeError` if any argument is `NaN` or `Infinity`
+- Throws `RangeError` if `min > max`
+
+---
+
 ### `formatCurrency`
 
 Formats a number as a localized currency string using `Intl.NumberFormat`.

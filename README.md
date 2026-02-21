@@ -60,6 +60,7 @@ KompKit provides essential utility functions that work seamlessly across Web (Ty
 - **🕐 debounce** - Delay function execution until after a wait period (prevents excessive API calls)
 - **📧 isEmail** - Validate email addresses with robust regex patterns
 - **💰 formatCurrency** - Format numbers as currency with full locale support
+- **📐 clamp** - Constrain a number within an inclusive [min, max] range
 
 ### Key Features
 

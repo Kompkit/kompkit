@@ -147,17 +147,34 @@ TextFormField(
 Format numbers as localized currency strings:
 
 ```dart
-// Default (EUR, es_ES locale)
-print(formatCurrency(1234.56)); // "1.234,56 €"
+// Default (USD, en-US locale)
+print(formatCurrency(1234.56)); // "$1,234.56"
 
-// US Dollar
-print(formatCurrency(1234.56, currency: 'USD', locale: 'en_US')); // "$1,234.56"
+// Euro
+print(formatCurrency(1234.56, currency: 'EUR', locale: 'es-ES')); // "1.234,56 EUR"
 
 // Japanese Yen
-print(formatCurrency(1000, currency: 'JPY', locale: 'ja_JP')); // "¥1,000"
+print(formatCurrency(1000, currency: 'JPY', locale: 'ja-JP')); // "JPY1,000"
 
 // British Pound
-print(formatCurrency(999.99, currency: 'GBP', locale: 'en_GB')); // "£999.99"
+print(formatCurrency(999.99, currency: 'GBP', locale: 'en-GB')); // "GBP999.99"
+```
+
+### Clamp
+
+Constrain a number within an inclusive `[min, max]` range:
+
+```dart
+clamp(5.0, 0.0, 10.0)   // 5.0
+clamp(-3.0, 0.0, 10.0)  // 0.0
+clamp(15.0, 0.0, 10.0)  // 10.0
+```
+
+Useful for clamping slider values, scroll offsets, or any bounded numeric input:
+
+```dart
+double opacity = clamp(userInput, 0.0, 1.0);
+double scrollOffset = clamp(rawOffset, 0.0, maxScrollExtent);
 ```
 
 #### Flutter Widget Example
@@ -312,6 +329,7 @@ KompKit Core for Flutter/Dart works on:
 - **Debounce**: Uses Dart's `Timer` class for efficient scheduling
 - **Email Validation**: Compiled regex for fast validation
 - **Currency Formatting**: Leverages Dart's `intl` package for optimal localization
+- **Clamp**: Pure arithmetic — zero overhead
 
 ## Next Steps
 
