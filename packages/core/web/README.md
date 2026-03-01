@@ -1,6 +1,6 @@
 # kompkit-core
 
-[![Version](https://img.shields.io/badge/version-0.3.1--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
+[![Version](https://img.shields.io/badge/version-0.4.0--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
 [![Web CI](https://github.com/Kompkit/KompKit/actions/workflows/web.yml/badge.svg?branch=release)](https://github.com/Kompkit/KompKit/actions/workflows/web.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -76,9 +76,17 @@ Constrains a number within an inclusive `[min, max]` range.
 ```ts
 import { clamp } from "kompkit-core";
 
-clamp(5, 0, 10); // 5
-clamp(-3, 0, 10); // 0
-clamp(15, 0, 10); // 10
+clamp(5, 0, 10); // 5  — within range, returned as-is
+clamp(-3, 0, 10); // 0  — below min, clamped to min
+clamp(15, 0, 10); // 10 — above max, clamped to max
+```
+
+Useful for bounding any user-controlled numeric value:
+
+```ts
+const opacity = clamp(userInput, 0, 1);
+const page = clamp(requestedPage, 1, totalPages);
+const volume = clamp(rawVolume, 0, 100);
 ```
 
 **Signature:**
@@ -99,13 +107,18 @@ Limits a function to execute at most once per `wait` milliseconds. The first cal
 ```ts
 import { throttle } from "kompkit-core";
 
-const onScroll = throttle(() => {
-  console.log("scroll:", window.scrollY);
+const onScroll = throttle((e: Event) => {
+  console.log("scrollY:", window.scrollY);
 }, 200);
 
 window.addEventListener("scroll", onScroll);
-onScroll.cancel(); // reset state (e.g. on component unmount)
+
+// Always clean up to avoid stale handlers:
+onScroll.cancel();
+window.removeEventListener("scroll", onScroll);
 ```
+
+Unlike `debounce` (which waits until calls stop), `throttle` fires immediately then enforces a cooldown — ideal for scroll, resize, and pointer events.
 
 **Signature:**
 

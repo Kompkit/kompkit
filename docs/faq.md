@@ -6,7 +6,7 @@ Utilities provide immediate value across platforms without requiring design deci
 
 ## What utilities are available?
 
-KompKit Core `0.3.1-alpha.0` currently provides:
+KompKit Core `0.4.0-alpha.0` currently provides:
 
 - **`debounce`** — Delay function execution until after a wait period
 - **`isEmail`** — Validate email addresses with a regex pattern
@@ -55,4 +55,4 @@ Possibly. The current utilities are framework-agnostic and work directly in Reac
 
 ## Is it production-ready?
 
-Not yet. The library is at `0.3.1-alpha.0`. APIs may change, and the test coverage is still expanding. Use it in experimental projects, but avoid production deployments until a stable `1.0.0` release.
+Not yet. The library is at `0.4.0-alpha.0`. APIs may change, and the test coverage is still expanding. Use it in experimental projects, but avoid production deployments until a stable `1.0.0` release.

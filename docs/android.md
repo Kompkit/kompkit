@@ -2,7 +2,7 @@
 
 KompKit Core provides small utilities for Android applications written in Kotlin.
 
-Status: `V0.3.1-alpha`.
+Status: `v0.4.0-alpha.0`.
 
 ## Installation
 
@@ -76,9 +76,17 @@ formatCurrency(1234.56, "EUR", "es-ES") // "1.234,56 €"
 ```kotlin
 import com.kompkit.core.clamp
 
-clamp(5.0, 0.0, 10.0)   // 5.0
-clamp(-3.0, 0.0, 10.0)  // 0.0
-clamp(15.0, 0.0, 10.0)  // 10.0
+clamp(5.0, 0.0, 10.0)   // 5.0  — within range, returned as-is
+clamp(-3.0, 0.0, 10.0)  // 0.0  — below min, clamped to min
+clamp(15.0, 0.0, 10.0)  // 10.0 — above max, clamped to max
+```
+
+Useful for bounding any user-controlled numeric value:
+
+```kotlin
+val opacity = clamp(userInput, 0.0, 1.0)
+val page = clamp(requestedPage, 1.0, totalPages.toDouble())
+val volume = clamp(rawVolume, 0.0, 100.0)
 ```
 
 ### throttle
@@ -89,21 +97,25 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 val scope = CoroutineScope(Dispatchers.Main)
-val onScroll = throttle<Unit>(200L, scope) {
-    println("scroll event")
+val onScroll = throttle<Int>(200L, scope) { position ->
+    println("scroll position: $position")
 }
 
-onScroll(Unit)    // executes immediately
-onScroll(Unit)    // ignored within 200ms
-onScroll.cancel() // reset state
+onScroll(0)       // executes immediately
+onScroll(50)      // ignored within 200ms
+onScroll(100)     // ignored within 200ms
+onScroll.cancel() // reset state — call in onDestroy/onStop
 ```
 
+Unlike `debounce` (which waits until calls stop), `throttle` fires immediately then enforces a cooldown — ideal for scroll, sensor, and touch events where you want immediate feedback at a controlled rate.
+
 ## Jetpack Compose integration
+
+### Debounced search field
 
 ```kotlin
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import com.kompkit.core.debounce
 
 @Composable
@@ -123,6 +135,55 @@ fun SearchBox() {
             onSearch(newValue)
         },
         placeholder = { Text("Search") }
+    )
+}
+```
+
+### Throttled scroll position tracker
+
+```kotlin
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.*
+import com.kompkit.core.throttle
+
+@Composable
+fun ScrollTracker() {
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val onScroll = remember {
+        throttle<Int>(200L, scope) { index ->
+            println("First visible item: $index")
+        }
+    }
+
+    LaunchedEffect(listState.firstVisibleItemIndex) {
+        onScroll(listState.firstVisibleItemIndex)
+    }
+
+    LazyColumn(state = listState) {
+        items(100) { index ->
+            Text("Item $index")
+        }
+    }
+}
+```
+
+### Bounded slider with clamp
+
+```kotlin
+import androidx.compose.material3.Slider
+import androidx.compose.runtime.*
+import com.kompkit.core.clamp
+
+@Composable
+fun VolumeSlider() {
+    var volume by remember { mutableStateOf(50f) }
+
+    Slider(
+        value = volume,
+        onValueChange = { raw -> volume = clamp(raw.toDouble(), 0.0, 100.0).toFloat() },
+        valueRange = 0f..100f
     )
 }
 ```

@@ -1,6 +1,6 @@
 # KompKit
 
-[![Version](https://img.shields.io/badge/version-0.3.1--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
+[![Version](https://img.shields.io/badge/version-0.4.0--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
 [![Web CI](https://github.com/Kompkit/KompKit/actions/workflows/web.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/web.yml)
 [![Kotlin CI](https://github.com/Kompkit/KompKit/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/android.yml)
 [![Flutter CI](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml)
@@ -97,7 +97,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.3.1-alpha.0
+  kompkit_core: ^0.4.0-alpha.0
 ```
 
 Then run:
@@ -131,14 +131,32 @@ Once installed, you can import and use KompKit utilities:
 **TypeScript/JavaScript:**
 
 ```typescript
-import { debounce, isEmail, formatCurrency } from "kompkit-core";
+import {
+  debounce,
+  isEmail,
+  formatCurrency,
+  clamp,
+  throttle,
+} from "kompkit-core";
 
-const search = debounce((query: string) => {
-  console.log("Searching:", query);
-}, 300);
+// Delay execution until typing stops
+const onSearch = debounce(
+  (query: string) => console.log("Search:", query),
+  300,
+);
 
+// Validate email
 console.log(isEmail("user@example.com")); // true
-console.log(formatCurrency(1234.56)); // "1.234,56 €"
+
+// Format as currency
+console.log(formatCurrency(1234.56)); // "$1,234.56"
+
+// Constrain a value to a range
+console.log(clamp(15, 0, 10)); // 10
+
+// Rate-limit a scroll handler
+const onScroll = throttle(() => console.log("scrollY:", window.scrollY), 200);
+window.addEventListener("scroll", onScroll);
 ```
 
 **Kotlin:**
@@ -146,12 +164,20 @@ console.log(formatCurrency(1234.56)); // "1.234,56 €"
 ```kotlin
 import com.kompkit.core.*
 
-val search = debounce<String>(300L, scope) { query ->
-    println("Searching: $query")
-}
+// Delay execution until typing stops
+val onSearch = debounce<String>(300L, scope) { query -> println("Search: $query") }
 
+// Validate email
 println(isEmail("user@example.com")) // true
-println(formatCurrency(1234.56)) // "1.234,56 €"
+
+// Format as currency
+println(formatCurrency(1234.56)) // "$1,234.56"
+
+// Constrain a value to a range
+println(clamp(15.0, 0.0, 10.0)) // 10.0
+
+// Rate-limit a scroll handler
+val onScroll = throttle<Int>(200L, scope) { pos -> println("scroll: $pos") }
 ```
 
 **Dart/Flutter:**
@@ -159,12 +185,26 @@ println(formatCurrency(1234.56)) // "1.234,56 €"
 ```dart
 import 'package:kompkit_core/kompkit_core.dart';
 
-final search = debounce<String>((String query) {
-  print('Searching: $query');
-}, const Duration(milliseconds: 300));
+// Delay execution until typing stops
+final onSearch = debounce<String>(
+  (query) => print('Search: $query'),
+  const Duration(milliseconds: 300),
+);
 
+// Validate email
 print(isEmail('user@example.com')); // true
-print(formatCurrency(1234.56)); // "1.234,56 €"
+
+// Format as currency
+print(formatCurrency(1234.56)); // "$1,234.56"
+
+// Constrain a value to a range
+print(clamp(15.0, 0.0, 10.0)); // 10.0
+
+// Rate-limit a scroll handler
+final onScroll = throttle<double>(
+  (offset) => print('scroll: $offset'),
+  const Duration(milliseconds: 200),
+);
 ```
 
 ## Documentation
@@ -213,7 +253,7 @@ KompKit/
 
 ## Version Information
 
-- **Current Version**: `0.3.1-alpha`
+- **Current Version**: `0.4.0-alpha.0`
 - **Minimum Requirements**:
   - Node.js 20+ (Web)
   - JDK 17+ (Android)
@@ -227,7 +267,7 @@ KompKit/
 KompKit is currently in **alpha**. This means:
 
 - **APIs may change** between alpha versions without a deprecation period.
-- **Pin to exact versions** in production: `"kompkit-core": "0.3.1-alpha.0"` / `kompkit_core: 0.3.1-alpha.0`.
+- **Pin to exact versions** in production: `"kompkit-core": "0.4.0-alpha.0"` / `kompkit_core: 0.4.0-alpha.0`.
 - **Breaking changes** will be documented in [CHANGELOG.md](./docs/CHANGELOG.md) with migration notes.
 - Once `1.0.0` is released, the project will follow strict [Semantic Versioning](https://semver.org/): breaking changes only in major versions.
 
@@ -239,6 +279,8 @@ KompKit aims for **conceptual parity**, not syntactic identity. The following di
 | ---------------- | -------- | -------------------------------------------------------------- | ----------------------------------------------------------- |
 | `debounce`       | Kotlin   | Requires `CoroutineScope` parameter                            | Structured concurrency — no global timer API on JVM         |
 | `debounce`       | Kotlin   | Action is first parameter, scope is last                       | Enables idiomatic trailing lambda syntax                    |
+| `throttle`       | Kotlin   | Requires `CoroutineScope` parameter                            | Same structured concurrency constraint as `debounce`        |
+| `throttle`       | Dart     | `wait` is a `Duration`, not a number                           | Idiomatic Dart — no bare millisecond integers               |
 | `formatCurrency` | Kotlin   | Accepts `String` locale, converts to `Locale` internally       | JVM `NumberFormat` requires `java.util.Locale`              |
 | `formatCurrency` | Dart     | Accepts BCP 47 locale, normalizes hyphen→underscore internally | `intl` package uses underscore-separated locale identifiers |
 

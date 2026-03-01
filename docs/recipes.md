@@ -409,6 +409,129 @@ final opacity = clamp(userValue, 0.0, 1.0);
 final scrollOffset = clamp(rawOffset, 0.0, maxScrollExtent);
 ```
 
+## Throttled scroll header with clamped opacity (TypeScript / React)
+
+A common pattern: fade in a sticky header as the user scrolls, throttled to avoid running every frame, opacity clamped to stay in `[0, 1]`.
+
+```tsx
+import { useEffect, useRef, useState } from "react";
+import { throttle, clamp } from "kompkit-core";
+
+export function StickyHeader() {
+  const [opacity, setOpacity] = useState(0);
+  const onScroll = useRef(
+    throttle(() => {
+      // Full opacity by 200px, clamped so it never exceeds 1
+      setOpacity(clamp(window.scrollY / 200, 0, 1));
+    }, 50),
+  );
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll.current);
+    return () => {
+      onScroll.current.cancel();
+      window.removeEventListener("scroll", onScroll.current);
+    };
+  }, []);
+
+  return (
+    <header style={{ opacity, position: "sticky", top: 0, background: "#fff" }}>
+      My App
+    </header>
+  );
+}
+```
+
+## Throttled scroll header with clamped opacity (Kotlin / Compose)
+
+```kotlin
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.lerp
+import com.kompkit.core.clamp
+import com.kompkit.core.throttle
+
+@Composable
+fun StickyHeader() {
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    var opacity by remember { mutableStateOf(0f) }
+
+    val onScroll = remember {
+        throttle<Int>(50L, scope) { offset ->
+            opacity = clamp(offset / 200.0, 0.0, 1.0).toFloat()
+        }
+    }
+
+    LaunchedEffect(listState.firstVisibleItemScrollOffset) {
+        onScroll(listState.firstVisibleItemScrollOffset)
+    }
+
+    Box(modifier = Modifier.graphicsLayer { alpha = opacity }) {
+        Text("My App", style = MaterialTheme.typography.headlineSmall)
+    }
+}
+```
+
+## Throttled scroll header with clamped opacity (Flutter)
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:kompkit_core/kompkit_core.dart';
+
+class StickyHeader extends StatefulWidget {
+  @override
+  State<StickyHeader> createState() => _StickyHeaderState();
+}
+
+class _StickyHeaderState extends State<StickyHeader> {
+  final _controller = ScrollController();
+  late final Throttled<double> _onScroll;
+  double _opacity = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _onScroll = throttle<double>(
+      (offset) => setState(() {
+        // Full opacity by 200px, clamped to [0, 1]
+        _opacity = clamp(offset / 200, 0.0, 1.0);
+      }),
+      const Duration(milliseconds: 50),
+    );
+    _controller.addListener(() => _onScroll(_controller.offset));
+  }
+
+  @override
+  void dispose() {
+    _onScroll.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ListView.builder(
+          controller: _controller,
+          itemCount: 100,
+          itemBuilder: (_, i) => ListTile(title: Text('Item $i')),
+        ),
+        Opacity(
+          opacity: _opacity,
+          child: Container(
+            color: Colors.white,
+            height: 56,
+            child: const Center(child: Text('My App')),
+          ),
+        ),
+      ],
+    );
+  }
+}
+```
+
 ## Email validation on form submission (Flutter)
 
 ```dart

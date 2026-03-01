@@ -1,30 +1,28 @@
 # Roadmap
 
-## Current State — `0.3.1-alpha.0`
+## Current State — `0.4.0-alpha.0`
 
 KompKit Core is in early alpha. The current release includes:
 
-- **3 utilities**: `debounce`, `isEmail`, `formatCurrency`
+- **5 utilities**: `debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle`
 - **3 platforms**: TypeScript (npm), Dart/Flutter (pub.dev), Kotlin/JVM (local only)
 - **Conceptual API parity** across all platforms with documented divergences
 - **Full CI/CD** with path-based workflow optimization
-- **Cancel support** on `debounce` across all platforms
+- **Cancel support** on `debounce` and `throttle` across all platforms
 
-## Next: `0.3.1-alpha`
+## Next: `0.5.0-alpha`
 
-Focus: utility expansion and Android publishing.
+Focus: async utilities and Android publishing.
 
-- `throttle` — Rate-limit function calls (natural companion to `debounce`)
-- `clamp` — Clamp a number between min and max
 - `sleep` — Promise/Future/suspend-based delay utility
+- `retry` — Retry failed async operations with configurable backoff
 - Publish Android/Kotlin package to Maven Central
 - Add `exports` subpath entries for individual utilities (tree-shaking improvement)
 
-## After: `0.4.0-alpha`
+## After: `0.6.0-alpha`
 
-Focus: async utilities and deeper platform integration.
+Focus: data utilities and deeper platform integration.
 
-- `retry` — Retry failed async operations with configurable backoff
 - `deepEqual` — Deep equality comparison for plain objects/maps
 - React hooks companion package (`kompkit-react`) — thin wrappers over core utilities
 
