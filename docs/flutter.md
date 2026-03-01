@@ -2,7 +2,7 @@
 
 This guide covers using KompKit Core utilities in Flutter and Dart applications.
 
-Status: `V0.3.0-alpha`.
+Status: `v0.4.0-alpha.0`.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Add KompKit Core to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.3.0-alpha.1
+  kompkit_core: ^0.4.0-alpha.0
 ```
 
 Then run:
@@ -29,7 +29,7 @@ For server-side Dart projects, add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.3.0-alpha.1
+  kompkit_core: ^0.4.0-alpha.0
 ```
 
 Then run:
@@ -147,20 +147,135 @@ TextFormField(
 Format numbers as localized currency strings:
 
 ```dart
-// Default (EUR, es_ES locale)
-print(formatCurrency(1234.56)); // "1.234,56 €"
+// Default (USD, en-US locale)
+print(formatCurrency(1234.56)); // "$1,234.56"
 
-// US Dollar
-print(formatCurrency(1234.56, currency: 'USD', locale: 'en_US')); // "$1,234.56"
+// Euro
+print(formatCurrency(1234.56, currency: 'EUR', locale: 'es-ES')); // "1.234,56 EUR"
 
 // Japanese Yen
-print(formatCurrency(1000, currency: 'JPY', locale: 'ja_JP')); // "¥1,000"
+print(formatCurrency(1000, currency: 'JPY', locale: 'ja-JP')); // "JPY1,000"
 
 // British Pound
-print(formatCurrency(999.99, currency: 'GBP', locale: 'en_GB')); // "£999.99"
+print(formatCurrency(999.99, currency: 'GBP', locale: 'en-GB')); // "GBP999.99"
+```
+
+### Clamp
+
+Constrain a number within an inclusive `[min, max]` range:
+
+```dart
+clamp(5.0, 0.0, 10.0)   // 5.0
+clamp(-3.0, 0.0, 10.0)  // 0.0
+clamp(15.0, 0.0, 10.0)  // 10.0
+```
+
+Useful for bounding any user-controlled numeric value:
+
+```dart
+final opacity = clamp(userInput, 0.0, 1.0);
+final page = clamp(requestedPage, 1.0, totalPages.toDouble());
+final scrollOffset = clamp(rawOffset, 0.0, maxScrollExtent);
 ```
 
 #### Flutter Widget Example
+
+```dart
+class VolumeSlider extends StatefulWidget {
+  @override
+  State<VolumeSlider> createState() => _VolumeSliderState();
+}
+
+class _VolumeSliderState extends State<VolumeSlider> {
+  double _volume = 50;
+
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+      value: _volume,
+      min: 0,
+      max: 100,
+      onChanged: (raw) => setState(() {
+        _volume = clamp(raw, 0.0, 100.0);
+      }),
+    );
+  }
+}
+```
+
+### Throttle
+
+Limit a function to execute at most once per wait duration. The first call executes immediately; subsequent calls within the wait period are ignored.
+
+```dart
+final onScroll = throttle<void>((_) {
+  print('scroll event');
+}, const Duration(milliseconds: 200));
+
+onScroll(null);    // executes immediately
+onScroll(null);    // ignored within 200ms
+onScroll.cancel(); // reset state (e.g. in dispose())
+```
+
+Unlike `debounce` (which waits until calls stop), `throttle` fires immediately then enforces a cooldown — ideal for scroll, sensor, and pointer events where you want immediate feedback at a controlled rate.
+
+Useful for scroll listeners, resize handlers, or any high-frequency event:
+
+```dart
+final onResize = throttle<Size>((size) {
+  setState(() => _size = size);
+}, const Duration(milliseconds: 100));
+```
+
+#### Flutter Widget Example — Throttled scroll tracker
+
+```dart
+class ScrollTracker extends StatefulWidget {
+  @override
+  State<ScrollTracker> createState() => _ScrollTrackerState();
+}
+
+class _ScrollTrackerState extends State<ScrollTracker> {
+  final _controller = ScrollController();
+  late final Throttled<double> _onScroll;
+  double _offset = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _onScroll = throttle<double>(
+      (offset) => setState(() => _offset = offset),
+      const Duration(milliseconds: 200),
+    );
+    _controller.addListener(() => _onScroll(_controller.offset));
+  }
+
+  @override
+  void dispose() {
+    _onScroll.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('Scroll offset: ${_offset.toStringAsFixed(1)}'),
+        Expanded(
+          child: ListView.builder(
+            controller: _controller,
+            itemCount: 100,
+            itemBuilder: (_, i) => ListTile(title: Text('Item $i')),
+          ),
+        ),
+      ],
+    );
+  }
+}
+```
+
+#### Flutter Widget Example — formatCurrency display
 
 ```dart
 class PriceDisplay extends StatelessWidget {
@@ -212,29 +327,55 @@ class MyApp extends StatelessWidget {
 
 class DemoScreen extends StatefulWidget {
   @override
-  _DemoScreenState createState() => _DemoScreenState();
+  State<DemoScreen> createState() => _DemoScreenState();
 }
 
 class _DemoScreenState extends State<DemoScreen> {
   final _emailController = TextEditingController();
   final _priceController = TextEditingController();
-  late final Function(String) _debouncedEmailCheck;
+  final _scrollController = ScrollController();
+
+  late final Debounced<String> _debouncedEmailCheck;
+  late final Throttled<double> _throttledScroll;
 
   String _emailStatus = '';
   String _formattedPrice = '';
+  double _volume = 50;
+  double _scrollOffset = 0;
 
   @override
   void initState() {
     super.initState();
-    _debouncedEmailCheck = debounce<String>((String email) {
+
+    _debouncedEmailCheck = debounce<String>((email) {
       setState(() {
         _emailStatus = isEmail(email) ? 'Valid email ✅' : 'Invalid email ❌';
       });
     }, const Duration(milliseconds: 300));
+
+    _throttledScroll = throttle<double>(
+      (offset) => setState(() => _scrollOffset = offset),
+      const Duration(milliseconds: 200),
+    );
+
+    _scrollController.addListener(
+      () => _throttledScroll(_scrollController.offset),
+    );
+  }
+
+  @override
+  void dispose() {
+    _debouncedEmailCheck.cancel();
+    _throttledScroll.cancel();
+    _scrollController.dispose();
+    _emailController.dispose();
+    _priceController.dispose();
+    super.dispose();
   }
 
   void _formatPrice() {
-    final price = double.tryParse(_priceController.text) ?? 0;
+    final raw = double.tryParse(_priceController.text) ?? 0;
+    final price = clamp(raw, 0.0, 1000000.0);
     setState(() {
       _formattedPrice = formatCurrency(price, currency: 'USD', locale: 'en_US');
     });
@@ -243,39 +384,75 @@ class _DemoScreenState extends State<DemoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('KompKit Demo')),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              onChanged: _debouncedEmailCheck,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                hintText: 'Enter email address',
+      appBar: AppBar(title: const Text('KompKit Demo')),
+      body: Row(
+        children: [
+          // Left panel — form controls
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // debounce: email validation
+                  TextField(
+                    controller: _emailController,
+                    onChanged: _debouncedEmailCheck.call,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'Enter email address',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(_emailStatus),
+                  const SizedBox(height: 24),
+
+                  // formatCurrency + clamp: price formatting
+                  TextField(
+                    controller: _priceController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Price (0 – 1,000,000)',
+                      hintText: 'Enter price',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: _formatPrice,
+                    child: const Text('Format as Currency'),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(_formattedPrice, style: const TextStyle(fontSize: 18)),
+                  const SizedBox(height: 24),
+
+                  // clamp: volume slider
+                  Text('Volume: ${_volume.toStringAsFixed(0)}'),
+                  Slider(
+                    value: _volume,
+                    min: 0,
+                    max: 100,
+                    onChanged: (raw) => setState(() {
+                      _volume = clamp(raw, 0.0, 100.0);
+                    }),
+                  ),
+
+                  // throttle: scroll offset display
+                  const SizedBox(height: 16),
+                  Text('Scroll offset: ${_scrollOffset.toStringAsFixed(1)}'),
+                ],
               ),
             ),
-            SizedBox(height: 8),
-            Text(_emailStatus),
-            SizedBox(height: 24),
-            TextField(
-              controller: _priceController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Price',
-                hintText: 'Enter price',
-              ),
+          ),
+
+          // Right panel — scrollable list (throttled scroll tracking)
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: 100,
+              itemBuilder: (_, i) => ListTile(title: Text('Item $i')),
             ),
-            SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: _formatPrice,
-              child: Text('Format as Currency'),
-            ),
-            SizedBox(height: 8),
-            Text(_formattedPrice, style: TextStyle(fontSize: 18)),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -312,6 +489,8 @@ KompKit Core for Flutter/Dart works on:
 - **Debounce**: Uses Dart's `Timer` class for efficient scheduling
 - **Email Validation**: Compiled regex for fast validation
 - **Currency Formatting**: Leverages Dart's `intl` package for optimal localization
+- **Clamp**: Pure arithmetic — zero overhead
+- **Throttle**: Uses Dart's `Timer` class — same mechanism as debounce
 
 ## Next Steps
 

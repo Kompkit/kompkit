@@ -45,6 +45,8 @@ All modules implement identical functionality:
 - **debounce**: Function execution delay with cancellation
 - **isEmail**: Email validation using regex patterns
 - **formatCurrency**: Localized currency formatting
+- **clamp**: Constrain a number within an inclusive [min, max] range
+- **throttle**: Limit function execution to at most once per wait period
 
 ## API Parity Contract
 
@@ -52,9 +54,9 @@ This section defines the formal contract for cross-platform API consistency in K
 
 ### What is Guaranteed
 
-- **Function names** are identical across all platforms (`debounce`, `isEmail`, `formatCurrency`).
+- **Function names** are identical across all platforms (`debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle`).
 - **Behavioral semantics** are identical: given the same inputs, all platforms produce the same observable output.
-- **Default values** are identical: `wait = 250ms`, `currency = "EUR"`, `locale = "en-US"`.
+- **Default values** are identical: `wait = 250ms`, `currency = "USD"`, `locale = "en-US"`.
 - **Error handling philosophy** is consistent: invalid inputs that cannot produce a meaningful result throw/throw-equivalent errors. Silent fallbacks are not permitted.
 - **Cancel capability**: `debounce` returns an object with a `cancel()` method on all platforms, allowing callers to discard pending executions (required for safe use in component lifecycles).
 
@@ -70,9 +72,11 @@ This section defines the formal contract for cross-platform API consistency in K
 Every utility follows the same mental model regardless of platform:
 
 ```
-debounce(action, options)  → Debounced<T>  (with .cancel())
-isEmail(value)             → Boolean
-formatCurrency(amount, options) → String
+debounce(action, options)         → Debounced<T>  (with .cancel())
+isEmail(value)                    → Boolean
+formatCurrency(amount, options)   → String
+clamp(value, min, max)            → Number
+throttle(fn, wait)                → Throttled<T>  (with .cancel())
 ```
 
 A developer familiar with the TypeScript API should be able to use the Kotlin or Dart API with only idiomatic adjustments — not conceptual re-learning.
@@ -120,9 +124,21 @@ export function isEmail(value: string): boolean;
 
 export function formatCurrency(
   amount: number,
-  currency?: string, // default: "EUR"
+  currency?: string, // default: "USD"
   locale?: string, // default: "en-US"
 ): string;
+
+export function clamp(value: number, min: number, max: number): number;
+
+export interface Throttled<T extends (...args: any[]) => void> {
+  (...args: Parameters<T>): void;
+  cancel(): void;
+}
+
+export function throttle<T extends (...args: any[]) => void>(
+  fn: T,
+  wait: number, // must be > 0
+): Throttled<T>;
 ```
 
 **Kotlin:**
@@ -143,9 +159,22 @@ fun isEmail(value: String): Boolean
 
 fun formatCurrency(
   amount: Double,
-  currency: String = "EUR",
+  currency: String = "USD",
   locale: String = "en-US",  // converted internally to java.util.Locale
 ): String
+
+fun clamp(value: Double, min: Double, max: Double): Double
+
+class Throttled<T>(private val invoke: (T) -> Unit) {
+  operator fun invoke(value: T): Unit
+  fun cancel(): Unit
+}
+
+fun <T> throttle(
+  waitMs: Long,           // must be > 0
+  scope: CoroutineScope,  // platform constraint: structured concurrency
+  action: (T) -> Unit,
+): Throttled<T>
 ```
 
 **Dart:**
@@ -165,9 +194,21 @@ bool isEmail(String value);
 
 String formatCurrency(
   num amount, {
-  String currency = "EUR",
+  String currency = "USD",
   String locale = "en-US",
 });
+
+double clamp(double value, double min, double max);
+
+class Throttled<T> {
+  void call(T arg);
+  void cancel();
+}
+
+Throttled<T> throttle<T>(
+  void Function(T) fn,
+  Duration wait, // must be > Duration.zero
+);
 ```
 
 ### Platform-Specific Adaptations
@@ -180,6 +221,8 @@ While maintaining API consistency, we leverage platform strengths:
 - **setTimeout/clearTimeout** for timing control
 - **Intl.NumberFormat** for currency formatting
 - **RegExp** for email validation
+- **Math.min/Math.max** for clamp
+- **setTimeout/clearTimeout** for throttle timer
 
 #### Kotlin Implementation
 
@@ -187,6 +230,8 @@ While maintaining API consistency, we leverage platform strengths:
 - **Job cancellation** for timing control
 - **NumberFormat/Currency** for localized formatting
 - **Regex** for email validation
+- **Double.coerceIn** for clamp
+- **Coroutine delay + Job** for throttle wait period
 
 #### Dart/Flutter Implementation
 
@@ -194,6 +239,8 @@ While maintaining API consistency, we leverage platform strengths:
 - **intl package** (`NumberFormat.currency`) for localized formatting
 - **RegExp** for email validation
 - **Null safety** with full type-safe APIs
+- **num.clamp** for clamp
+- **Timer** for throttle scheduling (same as debounce)
 
 ## Build System Architecture
 
@@ -272,16 +319,20 @@ android.yml:
 
 ```
 packages/core/web/tests/
-└── core.test.ts              # All utility tests
+├── core.test.ts              # debounce, isEmail, formatCurrency tests
+├── clamp.test.ts             # clamp unit tests
+└── throttle.test.ts          # throttle unit tests
 
 packages/core/android/src/test/kotlin/com/kompkit/core/
-└── CoreTests.kt              # All utility tests
+└── CoreTests.kt              # All utility tests (incl. ThrottleTests, ClampTests)
 
 packages/core/flutter/test/
 ├── kompkit_core_test.dart     # Integration tests
 ├── debounce_test.dart         # Debounce unit tests
 ├── validate_test.dart         # Validation unit tests
-└── format_test.dart           # Formatting unit tests
+├── format_test.dart           # Formatting unit tests
+├── clamp_test.dart            # Clamp unit tests
+└── throttle_test.dart         # Throttle unit tests
 ```
 
 ### Test Coverage

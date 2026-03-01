@@ -35,7 +35,7 @@ describe("isEmail", () => {
 describe("formatCurrency", () => {
   it("formats USD with en-US locale by default", () => {
     const result = formatCurrency(1234.56);
-    expect(result).toBe("€1,234.56");
+    expect(result).toBe("$1,234.56");
   });
 
   it("formats USD explicitly", () => {
@@ -66,6 +66,15 @@ describe("formatCurrency", () => {
 
   it("throws RangeError for invalid currency code", () => {
     expect(() => formatCurrency(100, "INVALID", "en-US")).toThrow(RangeError);
+  });
+
+  it("throws RangeError for NaN amount", () => {
+    expect(() => formatCurrency(NaN)).toThrow(RangeError);
+  });
+
+  it("throws RangeError for Infinity amount", () => {
+    expect(() => formatCurrency(Infinity)).toThrow(RangeError);
+    expect(() => formatCurrency(-Infinity)).toThrow(RangeError);
   });
 
   it("returns a string for unrecognized locale (V8 silently falls back)", () => {

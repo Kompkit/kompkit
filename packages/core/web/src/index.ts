@@ -2,3 +2,5 @@
 export * from "./debounce";
 export * from "./validate";
 export * from "./format";
+export * from "./clamp";
+export * from "./throttle";

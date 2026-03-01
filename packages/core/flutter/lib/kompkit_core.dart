@@ -39,3 +39,5 @@ library kompkit_core;
 export 'src/debounce.dart';
 export 'src/validate.dart';
 export 'src/format.dart';
+export 'src/clamp.dart';
+export 'src/throttle.dart';

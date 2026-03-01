@@ -42,7 +42,7 @@ class FormatCurrencyTests {
   fun defaultLocaleIsEnUs() {
     val result = formatCurrency(1234.56)
     assertTrue(result.contains("1,234.56"), "Expected en-US formatted number, got: $result")
-    assertTrue(result.contains("€"), "Expected EUR symbol, got: $result")
+    assertTrue(result.contains("$"), "Expected USD symbol, got: $result")
   }
 
   @Test
@@ -80,6 +80,17 @@ class FormatCurrencyTests {
   @Test
   fun throwsForInvalidCurrency() {
     assertFailsWith<IllegalArgumentException> { formatCurrency(100.0, "INVALID", "en-US") }
+  }
+
+  @Test
+  fun throwsForNaNAmount() {
+    assertFailsWith<IllegalArgumentException> { formatCurrency(Double.NaN) }
+  }
+
+  @Test
+  fun throwsForInfinityAmount() {
+    assertFailsWith<IllegalArgumentException> { formatCurrency(Double.POSITIVE_INFINITY) }
+    assertFailsWith<IllegalArgumentException> { formatCurrency(Double.NEGATIVE_INFINITY) }
   }
 
   @Test
@@ -146,5 +157,151 @@ class DebounceTests {
   fun cancelIsSafeWhenNoPendingCall() = runBlocking {
     val debounced = debounce<String>({}, 100L, this)
     debounced.cancel() // should not throw
+  }
+}
+
+class ThrottleTests {
+  @Test
+  fun executesImmediatelyOnFirstCall() = runBlocking {
+    var count = 0
+    val scope = this
+    val throttled = throttle<Unit>(200L, scope) { count++ }
+    throttled(Unit)
+    assertEquals(1, count)
+  }
+
+  @Test
+  fun ignoresSubsequentCallsWithinWaitPeriod() = runBlocking {
+    var count = 0
+    val scope = this
+    val throttled = throttle<Unit>(200L, scope) { count++ }
+    throttled(Unit)
+    throttled(Unit)
+    throttled(Unit)
+    assertEquals(1, count)
+  }
+
+  @Test
+  fun allowsExecutionAfterWaitPeriodElapses() = runBlocking {
+    var count = 0
+    val scope = this
+    val throttled = throttle<Unit>(50L, scope) { count++ }
+    throttled(Unit)
+    assertEquals(1, count)
+    delay(60)
+    throttled(Unit)
+    assertEquals(2, count)
+  }
+
+  @Test
+  fun passesArgumentsCorrectly() = runBlocking {
+    var received: String? = null
+    val scope = this
+    val throttled = throttle<String>(200L, scope) { received = it }
+    throttled("hello")
+    assertEquals("hello", received)
+  }
+
+  @Test
+  fun cancelResetsStateSoNextCallExecutesImmediately() = runBlocking {
+    var count = 0
+    val scope = this
+    val throttled = throttle<Unit>(200L, scope) { count++ }
+    throttled(Unit)
+    assertEquals(1, count)
+    throttled.cancel()
+    throttled(Unit)
+    assertEquals(2, count)
+  }
+
+  @Test
+  fun cancelIsSafeWhenNoPendingCall() = runBlocking {
+    val scope = this
+    val throttled = throttle<Unit>(200L, scope) {}
+    throttled.cancel() // should not throw
+  }
+
+  @Test
+  fun throwsWhenWaitIsZero() {
+    runBlocking { assertFailsWith<IllegalArgumentException> { throttle<Unit>(0L, this) {} } }
+  }
+
+  @Test
+  fun throwsWhenWaitIsNegative() {
+    runBlocking { assertFailsWith<IllegalArgumentException> { throttle<Unit>(-100L, this) {} } }
+  }
+}
+
+class ClampTests {
+  @Test
+  fun returnsValueWhenWithinRange() {
+    assertEquals(5.0, clamp(5.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun returnsMinWhenBelowRange() {
+    assertEquals(0.0, clamp(-3.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun returnsMaxWhenAboveRange() {
+    assertEquals(10.0, clamp(15.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun returnsMinWhenValueEqualsMin() {
+    assertEquals(0.0, clamp(0.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun returnsMaxWhenValueEqualsMax() {
+    assertEquals(10.0, clamp(10.0, 0.0, 10.0))
+  }
+
+  @Test
+  fun worksWithNegativeRange() {
+    assertEquals(-5.0, clamp(-5.0, -10.0, -1.0))
+    assertEquals(-1.0, clamp(0.0, -10.0, -1.0))
+    assertEquals(-10.0, clamp(-20.0, -10.0, -1.0))
+  }
+
+  @Test
+  fun worksWhenMinEqualsMax() {
+    assertEquals(3.0, clamp(5.0, 3.0, 3.0))
+  }
+
+  @Test
+  fun throwsWhenMinGreaterThanMax() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, 10.0, 0.0) }
+  }
+
+  @Test
+  fun throwsForNaNValue() {
+    assertFailsWith<IllegalArgumentException> { clamp(Double.NaN, 0.0, 10.0) }
+  }
+
+  @Test
+  fun throwsForNaNMin() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, Double.NaN, 10.0) }
+  }
+
+  @Test
+  fun throwsForNaNMax() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, 0.0, Double.NaN) }
+  }
+
+  @Test
+  fun throwsForInfinityValue() {
+    assertFailsWith<IllegalArgumentException> { clamp(Double.POSITIVE_INFINITY, 0.0, 10.0) }
+  }
+
+  @Test
+  fun throwsForInfinityMin() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, Double.POSITIVE_INFINITY, 10.0) }
+  }
+
+  @Test
+  fun throwsForInfinityMax() {
+    assertFailsWith<IllegalArgumentException> { clamp(5.0, 0.0, Double.POSITIVE_INFINITY) }
   }
 }

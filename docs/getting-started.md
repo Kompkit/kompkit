@@ -2,7 +2,7 @@
 
 KompKit Core is a small cross-platform utility library for Web (TypeScript), Android (Kotlin), and Flutter (Dart).
 
-Status: `V0.3.0-alpha`.
+Status: `V0.3.1-alpha`.
 
 ## Install
 
@@ -20,7 +20,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.3.0-alpha.1
+  kompkit_core: ^0.4.0-alpha.0
 ```
 
 Then run:
@@ -56,10 +56,12 @@ npm run test
 
 ## Utilities
 
-| Utility          | Description                                      |
-| ---------------- | ------------------------------------------------ |
-| `debounce`       | Debounce a function call by a delay.             |
-| `isEmail`        | Validate a string with a basic email regex.      |
-| `formatCurrency` | Format numbers into a localized currency string. |
+| Utility          | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `debounce`       | Debounce a function call by a delay.                      |
+| `isEmail`        | Validate a string with a basic email regex.               |
+| `formatCurrency` | Format numbers into a localized currency string.          |
+| `clamp`          | Constrain a number within an inclusive [min, max] range.  |
+| `throttle`       | Limit a function to execute at most once per wait period. |
 
 Next: read the detailed guides for [Web](./web.md), [Android](./android.md), [Flutter](./flutter.md), and the [Recipes](./recipes.md).

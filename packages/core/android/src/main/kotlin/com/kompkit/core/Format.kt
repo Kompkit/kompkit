@@ -11,28 +11,32 @@ import java.util.Locale
  * to a [Locale] as required by the JVM — callers do not need to construct [Locale] objects
  * directly.
  *
- * Throws [IllegalArgumentException] if [currency] is not a valid ISO 4217 code. Locale strings are
- * parsed leniently by the JVM; an unrecognized locale falls back to the root locale rather than
- * throwing.
+ * Throws [IllegalArgumentException] if [amount] is not finite (NaN or Infinity), or if [currency]
+ * is not a valid ISO 4217 code. Locale strings are parsed leniently by the JVM; an unrecognized
+ * locale falls back to the root locale rather than throwing.
  *
- * @param amount The numeric amount to format.
- * @param currency ISO 4217 currency code (e.g., "USD", "EUR", "JPY"). Defaults to "EUR".
+ * @param amount The numeric amount to format. Must be finite.
+ * @param currency ISO 4217 currency code (e.g., "USD", "EUR", "JPY"). Defaults to "USD".
  * @param locale BCP 47 locale string (e.g., "en-US", "es-ES"). Defaults to "en-US".
  * @return A formatted currency string.
- * @throws IllegalArgumentException if [currency] is not a valid ISO 4217 code.
+ * @throws IllegalArgumentException if [amount] is NaN or Infinity, or if [currency] is not a valid
+ * ISO 4217 code.
  *
  * @sample
  * ```kotlin
- * formatCurrency(1234.56)                        // "$1,234.56" (en-US default)
+ * formatCurrency(1234.56)                        // "$1,234.56" (en-US / USD default)
  * formatCurrency(1234.56, "EUR", "es-ES")        // "1.234,56 €"
  * formatCurrency(1000.0, "JPY", "ja-JP")         // "¥1,000"
  * ```
  */
 fun formatCurrency(
         amount: Double,
-        currency: String = "EUR",
+        currency: String = "USD",
         locale: String = "en-US",
 ): String {
+        if (!amount.isFinite()) {
+                throw IllegalArgumentException("Invalid amount: $amount. Must be a finite number.")
+        }
         val jvmLocale = Locale.forLanguageTag(locale)
         val currencyInstance =
                 runCatching { Currency.getInstance(currency) }.getOrElse {

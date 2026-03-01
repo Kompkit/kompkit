@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0-alpha.0] - 2026-02-28
+
+### Added
+
+- **`clamp` utility** across all platforms — constrain a number within an inclusive `[min, max]` range
+  - TypeScript: `clamp(value: number, min: number, max: number): number`
+  - Kotlin: `clamp(value: Double, min: Double, max: Double): Double`
+  - Dart: `clamp(double value, double min, double max): double`
+  - Throws `RangeError` / `IllegalArgumentException` / `ArgumentError` if `min > max` or any argument is non-finite
+  - Exported from all public entry points; full unit test coverage on all platforms
+
+- **`throttle` utility** across all platforms — limit a function to execute at most once per wait period
+  - TypeScript: `throttle<T>(fn: T, wait: number): T & { cancel(): void }`
+  - Kotlin: `throttle<T>(waitMs: Long, scope: CoroutineScope, action: (T) -> Unit): Throttled<T>`
+  - Dart: `throttle<T>(void Function(T) fn, Duration wait): Throttled<T>`
+  - First call executes immediately; subsequent calls within the wait period are ignored
+  - `cancel()` resets internal state with no pending execution firing
+  - Throws `Error` / `IllegalArgumentException` / `ArgumentError` if `wait <= 0`
+  - Exported from all public entry points; full unit test coverage on all platforms
+
+### Changed
+
+- **`formatCurrency` default currency**: Changed from `EUR` to `USD` across all platforms (TypeScript, Kotlin, Dart)
+- **`formatCurrency` finite validation**: Added validation that throws on `NaN` and `Infinity` amounts across all platforms
+  - TypeScript: throws `RangeError`
+  - Kotlin: throws `IllegalArgumentException`
+  - Dart: throws `ArgumentError`
+- **Documentation**: Updated all guides (getting-started, web, android, flutter, ARCHITECTURE, recipes, FAQ) to cover `clamp` and `throttle`
+- **Documentation**: Corrected `formatCurrency` examples to reflect `USD` default
+- **Documentation**: Added Platform Differences section to npm README documenting Dart single-argument debounce limitation and other divergences
+- **Packaging**: Clarified that `kompkit-core` ships both ESM and CommonJS builds (not ESM-only)
+
+### Fixed
+
+- Documentation inconsistency where examples showed `USD` but default was `EUR`
+
 ## [0.3.0-alpha] - 2026-02-09
 
 ### Changed
