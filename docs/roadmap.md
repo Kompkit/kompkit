@@ -1,40 +1,50 @@
 # Roadmap
 
-## Current State — `0.4.0-alpha.0`
+## Current State — `0.4.0-alpha.0` ✅ Released
 
 KompKit Core is in early alpha. The current release includes:
 
-- **5 utilities**: `debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle`
-- **3 platforms**: TypeScript (npm), Dart/Flutter (pub.dev), Kotlin/JVM (local only)
-- **Conceptual API parity** across all platforms with documented divergences
-- **Full CI/CD** with path-based workflow optimization
-- **Cancel support** on `debounce` and `throttle` across all platforms
+| Item                                                                      | Status       |
+| ------------------------------------------------------------------------- | ------------ |
+| 5 utilities: `debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle` | ✅ Completed |
+| TypeScript package published to npm                                       | ✅ Completed |
+| Flutter/Dart package published to pub.dev                                 | ✅ Completed |
+| Android/Kotlin Maven Central publishing config                            | ✅ Completed |
+| Conceptual API parity across all platforms with documented divergences    | ✅ Completed |
+| Full CI/CD with path-based workflow optimization                          | ✅ Completed |
+| `cancel()` support on `debounce` and `throttle` across all platforms      | ✅ Completed |
 
 ## Next: `0.5.0-alpha`
 
-Focus: async utilities and Android publishing.
+Focus: async utilities.
 
-- `sleep` — Promise/Future/suspend-based delay utility
-- `retry` — Retry failed async operations with configurable backoff
-- Publish Android/Kotlin package to Maven Central
-- Add `exports` subpath entries for individual utilities (tree-shaking improvement)
+| Item                                                                      | Status     |
+| ------------------------------------------------------------------------- | ---------- |
+| `sleep` — Promise/Future/suspend-based delay utility                      | 📋 Planned |
+| `retry` — Retry failed async operations with configurable backoff         | 📋 Planned |
+| Add `exports` subpath entries for individual utilities (web tree-shaking) | 📋 Planned |
+| Dedicated documentation site                                              | 📋 Planned |
 
 ## After: `0.6.0-alpha`
 
 Focus: data utilities and deeper platform integration.
 
-- `deepEqual` — Deep equality comparison for plain objects/maps
-- React hooks companion package (`kompkit-react`) — thin wrappers over core utilities
+| Item                                                                                | Status     |
+| ----------------------------------------------------------------------------------- | ---------- |
+| `deepEqual` — Deep equality comparison for plain objects/maps                       | 📋 Planned |
+| React hooks companion package (`kompkit-react`) — thin wrappers over core utilities | 📋 Planned |
 
 ## Toward `1.0.0`
 
 Before a stable 1.0 release, the following must be true:
 
-- All three platform packages published to their respective registries
-- API contract frozen with a documented migration guide for any breaking changes
-- Behavioral test coverage for all edge cases across all platforms
-- Dedicated documentation site with live examples
-- No known behavioral divergences between platforms
+| Requirement                                                                | Status         |
+| -------------------------------------------------------------------------- | -------------- |
+| All three platform packages published to their respective registries       | 🔄 In Progress |
+| API contract frozen with a documented migration guide for breaking changes | 📋 Planned     |
+| Behavioral test coverage for all edge cases across all platforms           | 🔄 In Progress |
+| Dedicated documentation site with live examples                            | 📋 Planned     |
+| No known behavioral divergences between platforms                          | 📋 Planned     |
 
 ## Long-term (post-1.0)
 

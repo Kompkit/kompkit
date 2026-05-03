@@ -165,7 +165,11 @@ window.addEventListener("scroll", onScroll);
 import com.kompkit.core.*
 
 // Delay execution until typing stops
-val onSearch = debounce<String>(300L, scope) { query -> println("Search: $query") }
+val onSearch = debounce<String>(
+    action = { query -> println("Search: $query") },
+    waitMs = 300L,
+    scope = scope,
+)
 
 // Validate email
 println(isEmail("user@example.com")) // true
@@ -212,9 +216,14 @@ final onScroll = throttle<double>(
 ### 📚 Detailed Guides
 
 - **[Getting Started Guide](./docs/getting-started.md)** - Complete setup and first steps
+- **[Web / TypeScript Guide](./docs/web.md)** - Web-specific usage, React and Vue examples
+- **[Android / Kotlin Guide](./docs/android.md)** - Kotlin usage, Jetpack Compose examples
+- **[Flutter / Dart Guide](./docs/flutter.md)** - Flutter widget examples, lifecycle patterns
+- **[Recipes](./docs/recipes.md)** - Real-world cross-platform usage patterns
 - **[API Reference](./docs/api/)** - Auto-generated API documentation
   - [Web/TypeScript API](./docs/api/web/) - TypeDoc generated docs
   - [Android/Kotlin API](./docs/api/android/) - Dokka generated docs
+  - [Flutter/Dart API](./docs/api/flutter/) - DartDoc generated docs _(run `dart doc` locally)_
 - **[Architecture Overview](./docs/ARCHITECTURE.md)** - Monorepo structure and design
 - **[Contributing Guide](./docs/CONTRIBUTING.md)** - Development workflow and guidelines
 - **[CI/CD Documentation](./docs/README_CI.md)** - Build and deployment processes
@@ -275,14 +284,15 @@ KompKit is currently in **alpha**. This means:
 
 KompKit aims for **conceptual parity**, not syntactic identity. The following differences are intentional and documented:
 
-| Utility          | Platform | Difference                                                     | Reason                                                      |
-| ---------------- | -------- | -------------------------------------------------------------- | ----------------------------------------------------------- |
-| `debounce`       | Kotlin   | Requires `CoroutineScope` parameter                            | Structured concurrency — no global timer API on JVM         |
-| `debounce`       | Kotlin   | Action is first parameter, scope is last                       | Enables idiomatic trailing lambda syntax                    |
-| `throttle`       | Kotlin   | Requires `CoroutineScope` parameter                            | Same structured concurrency constraint as `debounce`        |
-| `throttle`       | Dart     | `wait` is a `Duration`, not a number                           | Idiomatic Dart — no bare millisecond integers               |
-| `formatCurrency` | Kotlin   | Accepts `String` locale, converts to `Locale` internally       | JVM `NumberFormat` requires `java.util.Locale`              |
-| `formatCurrency` | Dart     | Accepts BCP 47 locale, normalizes hyphen→underscore internally | `intl` package uses underscore-separated locale identifiers |
+| Utility          | Platform | Difference                                                      | Reason                                                      |
+| ---------------- | -------- | --------------------------------------------------------------- | ----------------------------------------------------------- |
+| `debounce`       | Kotlin   | Requires `CoroutineScope` parameter                             | Structured concurrency — no global timer API on JVM         |
+| `debounce`       | Kotlin   | Action is first parameter, scope is last                        | Enables idiomatic trailing lambda syntax                    |
+| `throttle`       | Kotlin   | Requires `CoroutineScope` parameter                             | Same structured concurrency constraint as `debounce`        |
+| `throttle`       | Kotlin   | `waitMs` first, `scope` second, `action` last (trailing lambda) | Differs from `debounce` — `action` is not the first param   |
+| `throttle`       | Dart     | `wait` is a `Duration`, not a number                            | Idiomatic Dart — no bare millisecond integers               |
+| `formatCurrency` | Kotlin   | Accepts `String` locale, converts to `Locale` internally        | JVM `NumberFormat` requires `java.util.Locale`              |
+| `formatCurrency` | Dart     | Accepts BCP 47 locale, normalizes hyphen→underscore internally  | `intl` package uses underscore-separated locale identifiers |
 
 All platforms accept BCP 47 locale strings (e.g., `"en-US"`). All platforms throw on invalid `currency` or `locale` inputs.
 

@@ -2,7 +2,7 @@
 
 KompKit Core is a small cross-platform utility library for Web (TypeScript), Android (Kotlin), and Flutter (Dart).
 
-Status: `V0.3.1-alpha`.
+Status: `0.4.0-alpha.0`.
 
 ## Install
 
@@ -31,16 +31,18 @@ flutter pub get
 
 > [pub.dev/packages/kompkit_core](https://pub.dev/packages/kompkit_core)
 
-### Android (Gradle) — Local only
+### Android / Kotlin (Maven Central)
 
-> Not yet published to Maven. Use a local project reference for now.
+Add to your `app/build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation(project(":kompkit-core"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("com.kompkit:kompkit-core:0.4.0-alpha.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
 ```
+
+> See [packages/core/android/README.md](../packages/core/android/README.md) for full setup.
 
 ## Build and test locally
 
@@ -50,8 +52,14 @@ Run from the repository root:
 # Build web package
 npm run build
 
-# Run tests for web and android
-npm run test
+# Run web tests
+npm run test:web
+
+# Run Android/Kotlin tests
+cd packages/core/android && ./gradlew test
+
+# Run Flutter tests
+cd packages/core/flutter && flutter test
 ```
 
 ## Utilities
@@ -63,5 +71,9 @@ npm run test
 | `formatCurrency` | Format numbers into a localized currency string.          |
 | `clamp`          | Constrain a number within an inclusive [min, max] range.  |
 | `throttle`       | Limit a function to execute at most once per wait period. |
+
+---
+
+> **⚠️ Alpha**: APIs may change before `1.0.0`. Pin to an exact version in production.
 
 Next: read the detailed guides for [Web](./web.md), [Android](./android.md), [Flutter](./flutter.md), and the [Recipes](./recipes.md).

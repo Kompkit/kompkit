@@ -44,9 +44,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 val scope = CoroutineScope(Dispatchers.Main)
-val onType = debounce<String>(300L, scope) { value ->
-    println("Search: $value")
-}
+val onType = debounce<String>(
+    action = { value -> println("Search: $value") },
+    waitMs = 300L,
+    scope = scope,
+)
 
 onType("k")
 onType("ko")
@@ -123,9 +125,11 @@ fun SearchBox() {
     var value by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val onSearch = remember {
-        debounce<String>(300L, scope) { query ->
-            println("Search: $query")
-        }
+        debounce<String>(
+            action = { query -> println("Search: $query") },
+            waitMs = 300L,
+            scope = scope,
+        )
     }
 
     TextField(
