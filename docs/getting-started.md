@@ -2,7 +2,7 @@
 
 KompKit Core is a small cross-platform utility library for Web (TypeScript), Android (Kotlin), and Flutter (Dart).
 
-Status: `0.4.0-alpha.0`.
+Status: `0.4.1-alpha.0`.
 
 ## Install
 
@@ -20,7 +20,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.4.0-alpha.0
+  kompkit_core: ^0.4.1-alpha.0
 ```
 
 Then run:
@@ -37,7 +37,7 @@ Add to your `app/build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.kompkit:kompkit-core:0.4.0-alpha.0")
+    implementation("com.kompkit:kompkit-core:0.4.1-alpha.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
 ```

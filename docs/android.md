@@ -2,7 +2,7 @@
 
 KompKit Core provides small utilities for Android applications written in Kotlin.
 
-Status: `v0.4.0-alpha.0`.
+Status: `v0.4.1-alpha.0`.
 
 ## Installation
 
