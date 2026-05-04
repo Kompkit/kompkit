@@ -10,7 +10,7 @@ Add to your `app/build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.kompkit:kompkit-core:0.4.0-alpha.0")
+    implementation("com.kompkit:kompkit-core:0.4.1-alpha.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
 ```

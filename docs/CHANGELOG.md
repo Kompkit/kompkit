@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1-alpha.0] - 2026-05-04
+
+**Changed**
+
+- Version bump to unblock CI publish (0.4.0-alpha.0 already published to npm and pub.dev)
+- Android/Kotlin Maven Central publishing configured (`com.vanniktech.maven.publish`)
+- Documentation consistency pass: fixed Kotlin `debounce` call-site examples, version references, broken links
+- Created `packages/core/android/README.md`
+- Expanded `packages/core/flutter/README.md` with full API docs and lifecycle examples
+- Updated `docs/roadmap.md` with status indicators
+
 ## [0.4.0-alpha.0] - 2026-02-28
 
 ### Added

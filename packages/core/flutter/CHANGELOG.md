@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1-alpha.0
+
+- Version bump to unblock CI (0.4.0-alpha.0 already published to pub.dev)
+- Documentation consistency pass and expanded Flutter README
+
 ## 0.4.0-alpha.0
 
 - **clamp** — Constrain a number within an inclusive `[min, max]` range

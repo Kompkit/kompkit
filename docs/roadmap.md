@@ -1,6 +1,6 @@
 # Roadmap
 
-## Current State — `0.4.0-alpha.0` ✅ Released
+## Current State — `0.4.1-alpha.0` ✅ Released
 
 KompKit Core is in early alpha. The current release includes:
 

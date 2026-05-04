@@ -10,7 +10,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  kompkit_core: ^0.4.0-alpha.0
+  kompkit_core: ^0.4.1-alpha.0
 ```
 
 Then run:
