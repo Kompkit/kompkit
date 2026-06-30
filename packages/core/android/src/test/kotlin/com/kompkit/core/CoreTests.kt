@@ -1,12 +1,12 @@
 package com.kompkit.core
 
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import org.junit.Test
 
 class IsEmailTests {
   @Test
@@ -104,122 +104,133 @@ class FormatCurrencyTests {
 
 class DebounceTests {
   @Test
-  fun doesNotCallImmediately() = runBlocking {
-    var called = false
-    val debounced = debounce<String>({ called = true }, 200L, this)
-    debounced("a")
-    assertFalse(called)
-  }
+  fun doesNotCallImmediately() =
+    runBlocking {
+      var called = false
+      val debounced = debounce<String>({ called = true }, 200L, this)
+      debounced("a")
+      assertFalse(called)
+    }
 
   @Test
-  fun callsAfterWaitPeriod() = runBlocking {
-    var called = false
-    val debounced = debounce<String>({ called = true }, 100L, this)
-    debounced("a")
-    delay(50)
-    assertFalse(called)
-    delay(100)
-    assertTrue(called)
-  }
+  fun callsAfterWaitPeriod() =
+    runBlocking {
+      var called = false
+      val debounced = debounce<String>({ called = true }, 100L, this)
+      debounced("a")
+      delay(50)
+      assertFalse(called)
+      delay(100)
+      assertTrue(called)
+    }
 
   @Test
-  fun onlyCallsOnceForRapidCalls() = runBlocking {
-    var callCount = 0
-    var lastValue = ""
-    val debounced =
-            debounce<String>(
-                    { v ->
-                      callCount++
-                      lastValue = v
-                    },
-                    100L,
-                    this
-            )
-    debounced("a")
-    debounced("b")
-    debounced("c")
-    delay(200)
-    assertEquals(1, callCount)
-    assertEquals("c", lastValue)
-  }
+  fun onlyCallsOnceForRapidCalls() =
+    runBlocking {
+      var callCount = 0
+      var lastValue = ""
+      val debounced =
+        debounce<String>(
+          { v ->
+            callCount++
+            lastValue = v
+          },
+          100L,
+          this,
+        )
+      debounced("a")
+      debounced("b")
+      debounced("c")
+      delay(200)
+      assertEquals(1, callCount)
+      assertEquals("c", lastValue)
+    }
 
   @Test
-  fun cancelPreventsExecution() = runBlocking {
-    var called = false
-    val debounced = debounce<String>({ called = true }, 100L, this)
-    debounced("a")
-    debounced.cancel()
-    delay(200)
-    assertFalse(called)
-  }
+  fun cancelPreventsExecution() =
+    runBlocking {
+      var called = false
+      val debounced = debounce<String>({ called = true }, 100L, this)
+      debounced("a")
+      debounced.cancel()
+      delay(200)
+      assertFalse(called)
+    }
 
   @Test
-  fun cancelIsSafeWhenNoPendingCall() = runBlocking {
-    val debounced = debounce<String>({}, 100L, this)
-    debounced.cancel() // should not throw
-  }
+  fun cancelIsSafeWhenNoPendingCall() =
+    runBlocking {
+      val debounced = debounce<String>({}, 100L, this)
+      debounced.cancel() // should not throw
+    }
 }
 
 class ThrottleTests {
   @Test
-  fun executesImmediatelyOnFirstCall() = runBlocking {
-    var count = 0
-    val scope = this
-    val throttled = throttle<Unit>(200L, scope) { count++ }
-    throttled(Unit)
-    assertEquals(1, count)
-  }
+  fun executesImmediatelyOnFirstCall() =
+    runBlocking {
+      var count = 0
+      val scope = this
+      val throttled = throttle<Unit>(200L, scope) { count++ }
+      throttled(Unit)
+      assertEquals(1, count)
+    }
 
   @Test
-  fun ignoresSubsequentCallsWithinWaitPeriod() = runBlocking {
-    var count = 0
-    val scope = this
-    val throttled = throttle<Unit>(200L, scope) { count++ }
-    throttled(Unit)
-    throttled(Unit)
-    throttled(Unit)
-    assertEquals(1, count)
-  }
+  fun ignoresSubsequentCallsWithinWaitPeriod() =
+    runBlocking {
+      var count = 0
+      val scope = this
+      val throttled = throttle<Unit>(200L, scope) { count++ }
+      throttled(Unit)
+      throttled(Unit)
+      throttled(Unit)
+      assertEquals(1, count)
+    }
 
   @Test
-  fun allowsExecutionAfterWaitPeriodElapses() = runBlocking {
-    var count = 0
-    val scope = this
-    val throttled = throttle<Unit>(50L, scope) { count++ }
-    throttled(Unit)
-    assertEquals(1, count)
-    delay(60)
-    throttled(Unit)
-    assertEquals(2, count)
-  }
+  fun allowsExecutionAfterWaitPeriodElapses() =
+    runBlocking {
+      var count = 0
+      val scope = this
+      val throttled = throttle<Unit>(50L, scope) { count++ }
+      throttled(Unit)
+      assertEquals(1, count)
+      delay(60)
+      throttled(Unit)
+      assertEquals(2, count)
+    }
 
   @Test
-  fun passesArgumentsCorrectly() = runBlocking {
-    var received: String? = null
-    val scope = this
-    val throttled = throttle<String>(200L, scope) { received = it }
-    throttled("hello")
-    assertEquals("hello", received)
-  }
+  fun passesArgumentsCorrectly() =
+    runBlocking {
+      var received: String? = null
+      val scope = this
+      val throttled = throttle<String>(200L, scope) { received = it }
+      throttled("hello")
+      assertEquals("hello", received)
+    }
 
   @Test
-  fun cancelResetsStateSoNextCallExecutesImmediately() = runBlocking {
-    var count = 0
-    val scope = this
-    val throttled = throttle<Unit>(200L, scope) { count++ }
-    throttled(Unit)
-    assertEquals(1, count)
-    throttled.cancel()
-    throttled(Unit)
-    assertEquals(2, count)
-  }
+  fun cancelResetsStateSoNextCallExecutesImmediately() =
+    runBlocking {
+      var count = 0
+      val scope = this
+      val throttled = throttle<Unit>(200L, scope) { count++ }
+      throttled(Unit)
+      assertEquals(1, count)
+      throttled.cancel()
+      throttled(Unit)
+      assertEquals(2, count)
+    }
 
   @Test
-  fun cancelIsSafeWhenNoPendingCall() = runBlocking {
-    val scope = this
-    val throttled = throttle<Unit>(200L, scope) {}
-    throttled.cancel() // should not throw
-  }
+  fun cancelIsSafeWhenNoPendingCall() =
+    runBlocking {
+      val scope = this
+      val throttled = throttle<Unit>(200L, scope) {}
+      throttled.cancel() // should not throw
+    }
 
   @Test
   fun throwsWhenWaitIsZero() {

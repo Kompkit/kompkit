@@ -48,38 +48,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint (if available)
-        run: |
-          if npm run lint --workspaces --if-present 2>/dev/null; then
-            echo "Workspace lint completed"
-          else
-            echo "No workspace lint found, trying root lint"
-            npm run lint || echo "No lint script found"
-          fi
-
-      - name: Type check (if available)
-        run: |
-          if npm run typecheck --workspaces --if-present 2>/dev/null; then
-            echo "Workspace typecheck completed"
-          else
-            echo "No workspace typecheck found, trying root typecheck"
-            npm run typecheck || echo "No typecheck script found"
-          fi
+      - name: Type check
+        run: npm run typecheck:web
 
       - name: Build packages
-        run: |
-          echo "Building with Lerna..."
-          npm run build
+        run: npm run build
 
       - name: Run tests
-        run: |
-          echo "Running tests with Lerna..."
-          npm run test:web || echo "No web tests found"
+        run: npm run test:web
 
       - name: Generate Web API docs
-        run: |
-          echo "Generating web docs..."
-          npm run docs:web || echo "No web docs script found"
+        run: npm run docs:web || echo "Doc generation failed (non-blocking)"
 
       - name: Upload web docs artifact
         uses: actions/upload-artifact@v4
