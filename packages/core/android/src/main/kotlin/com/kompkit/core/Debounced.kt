@@ -18,9 +18,9 @@ class Debounced<T>(private val invoke: (T) -> Unit) {
   operator fun invoke(value: T) = invoke.invoke(value)
 
   /** Cancels any pending invocation without executing it. */
-  fun cancel() = _cancel()
+  fun cancel() = cancelAction()
 
-  internal var _cancel: () -> Unit = {}
+  internal var cancelAction: () -> Unit = {}
 }
 
 /**
@@ -62,6 +62,6 @@ fun <T> debounce(
       action(param)
     }
   }
-  debounced._cancel = { job?.cancel(); job = null }
+  debounced.cancelAction = { job?.cancel(); job = null }
   return debounced
 }

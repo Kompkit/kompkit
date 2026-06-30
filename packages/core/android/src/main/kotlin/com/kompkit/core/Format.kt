@@ -34,9 +34,7 @@ fun formatCurrency(
         currency: String = "USD",
         locale: String = "en-US",
 ): String {
-        if (!amount.isFinite()) {
-                throw IllegalArgumentException("Invalid amount: $amount. Must be a finite number.")
-        }
+        require(amount.isFinite()) { "Invalid amount: $amount. Must be a finite number." }
         val jvmLocale = Locale.forLanguageTag(locale)
         val currencyInstance =
                 runCatching { Currency.getInstance(currency) }.getOrElse {

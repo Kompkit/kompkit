@@ -18,9 +18,9 @@ class Throttled<T>(private val invoke: (T) -> Unit) {
   operator fun invoke(value: T) = invoke.invoke(value)
 
   /** Resets the throttle state, allowing the next call to execute immediately. */
-  fun cancel() = _cancel()
+  fun cancel() = cancelAction()
 
-  internal var _cancel: () -> Unit = {}
+  internal var cancelAction: () -> Unit = {}
 }
 
 /**
@@ -62,7 +62,7 @@ fun <T> throttle(
       job = null
     }
   }
-  throttled._cancel = {
+  throttled.cancelAction = {
     job?.cancel()
     job = null
   }
