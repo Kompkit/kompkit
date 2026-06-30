@@ -30,17 +30,17 @@ import java.util.Locale
  * ```
  */
 fun formatCurrency(
-        amount: Double,
-        currency: String = "USD",
-        locale: String = "en-US",
+  amount: Double,
+  currency: String = "USD",
+  locale: String = "en-US",
 ): String {
-        require(amount.isFinite()) { "Invalid amount: $amount. Must be a finite number." }
-        val jvmLocale = Locale.forLanguageTag(locale)
-        val currencyInstance =
-                runCatching { Currency.getInstance(currency) }.getOrElse {
-                        throw IllegalArgumentException("Invalid currency code: '$currency'")
-                }
-        val nf = NumberFormat.getCurrencyInstance(jvmLocale)
-        nf.currency = currencyInstance
-        return nf.format(amount)
+  require(amount.isFinite()) { "Invalid amount: $amount. Must be a finite number." }
+  val jvmLocale = Locale.forLanguageTag(locale)
+  val currencyInstance =
+    runCatching { Currency.getInstance(currency) }.getOrElse {
+      throw IllegalArgumentException("Invalid currency code: '$currency'")
+    }
+  val nf = NumberFormat.getCurrencyInstance(jvmLocale)
+  nf.currency = currencyInstance
+  return nf.format(amount)
 }

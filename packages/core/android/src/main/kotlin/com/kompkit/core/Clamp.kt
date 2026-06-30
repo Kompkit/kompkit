@@ -16,12 +16,16 @@ package com.kompkit.core
  * clamp(15.0, 0.0, 10.0)  // 10.0
  * ```
  */
-fun clamp(value: Double, min: Double, max: Double): Double {
-        require(value.isFinite() && min.isFinite() && max.isFinite()) {
-                "clamp: all arguments must be finite numbers (got value=$value, min=$min, max=$max)."
-        }
-        require(min <= max) {
-                "clamp: min ($min) must not be greater than max ($max)."
-        }
-        return value.coerceIn(min, max)
+fun clamp(
+  value: Double,
+  min: Double,
+  max: Double,
+): Double {
+  require(value.isFinite() && min.isFinite() && max.isFinite()) {
+    "clamp: all arguments must be finite numbers (got value=$value, min=$min, max=$max)."
+  }
+  require(min <= max) {
+    "clamp: min ($min) must not be greater than max ($max)."
+  }
+  return value.coerceIn(min, max)
 }

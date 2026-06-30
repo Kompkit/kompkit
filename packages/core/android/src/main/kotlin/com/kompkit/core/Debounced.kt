@@ -55,13 +55,18 @@ fun <T> debounce(
   scope: CoroutineScope,
 ): Debounced<T> {
   var job: Job? = null
-  val debounced = Debounced<T> { param ->
-    job?.cancel()
-    job = scope.launch {
-      delay(waitMs)
-      action(param)
+  val debounced =
+    Debounced<T> { param ->
+      job?.cancel()
+      job =
+        scope.launch {
+          delay(waitMs)
+          action(param)
+        }
     }
+  debounced.cancelAction = {
+    job?.cancel()
+    job = null
   }
-  debounced.cancelAction = { job?.cancel(); job = null }
   return debounced
 }

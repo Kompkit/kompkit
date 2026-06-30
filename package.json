@@ -1,6 +1,6 @@
 {
   "name": "kompkit",
-  "version": "0.3.1-alpha",
+  "version": "0.4.1-alpha.0",
   "description": "A lightweight cross-platform utility kit for Web (TypeScript), Android (Kotlin), and Flutter (Dart): debounce, isEmail, formatCurrency",
   "private": true,
   "workspaces": [
@@ -12,6 +12,7 @@
     "build:android": "cd packages/core/android && ./gradlew build",
     "build:flutter": "cd packages/core/flutter && flutter packages get",
     "test:web": "lerna run test --scope=kompkit-core",
+    "typecheck:web": "npm --prefix packages/core/web run typecheck",
     "test:android": "cd packages/core/android && ./gradlew test",
     "test:flutter": "cd packages/core/flutter && flutter test",
     "test": "npm run test:web && npm run test:android && npm run test:flutter",

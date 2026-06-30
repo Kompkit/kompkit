@@ -51,11 +51,11 @@ jobs:
 
       - name: Lint (ktlint)
         working-directory: packages/core/android
-        run: ./gradlew ktlintCheck --stacktrace --no-daemon || echo "ktlint not configured"
+        run: ./gradlew ktlintCheck --stacktrace --no-daemon
 
       - name: Static analysis (detekt)
         working-directory: packages/core/android
-        run: ./gradlew detekt --stacktrace --no-daemon || echo "detekt not configured"
+        run: ./gradlew detekt --stacktrace --no-daemon
 
       - name: Build JAR
         working-directory: packages/core/android

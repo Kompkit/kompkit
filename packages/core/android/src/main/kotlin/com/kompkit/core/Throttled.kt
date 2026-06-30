@@ -54,14 +54,16 @@ fun <T> throttle(
   require(waitMs > 0) { "throttle: waitMs must be greater than 0 (got $waitMs)." }
 
   var job: Job? = null
-  val throttled = Throttled<T> { param ->
-    if (job != null) return@Throttled
-    action(param)
-    job = scope.launch {
-      delay(waitMs)
-      job = null
+  val throttled =
+    Throttled<T> { param ->
+      if (job != null) return@Throttled
+      action(param)
+      job =
+        scope.launch {
+          delay(waitMs)
+          job = null
+        }
     }
-  }
   throttled.cancelAction = {
     job?.cancel()
     job = null
