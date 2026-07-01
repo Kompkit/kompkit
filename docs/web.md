@@ -67,7 +67,7 @@ isEmail("invalid@"); // false
 import { formatCurrency } from "kompkit-core";
 
 formatCurrency(1234.56); // "$1,234.56" (en-US / USD default)
-formatCurrency(1234.56, "EUR", "es-ES"); // "1.234,56 €"
+formatCurrency(1234.56, "EUR", "de-DE"); // "1.234,56 €"
 ```
 
 ### clamp

@@ -181,10 +181,11 @@ When adding a new utility function:
 
 ### TypeScript
 
-- Use ESLint and Prettier configurations
 - Prefer `const` over `let`
 - Use explicit return types for public APIs
+- Type-check with `npm run typecheck:web` (`tsc --noEmit`)
 - Follow existing naming conventions
+- ESLint/Prettier configs are planned; match the surrounding code style in the meantime
 
 ### Kotlin
 
@@ -245,7 +246,7 @@ When adding a new utility function:
 - [ ] ✅ Feature implemented in TypeScript, Kotlin, and Dart
 - [ ] ✅ Tests added for all platforms with good coverage
 - [ ] ✅ All existing tests pass (`npm test`)
-- [ ] ✅ Code follows style guidelines (ktlint, ESLint)
+- [ ] ✅ Code follows style guidelines (ktlint + detekt for Kotlin, `dart format` + `flutter analyze` for Dart, `tsc --noEmit` for TypeScript)
 - [ ] ✅ API documentation updated (JSDoc/KDoc)
 - [ ] ✅ Conventional commit messages used
 - [ ] ✅ No breaking changes (or clearly documented)

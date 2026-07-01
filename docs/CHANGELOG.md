@@ -7,12 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **CI quality gates hardened**: removed `|| echo` fallbacks so web typecheck/tests and Android `ktlintCheck`/`detekt` now actually fail the build instead of passing silently
+- Added `typecheck`/`typecheck:web` scripts (`tsc --noEmit`) and wired them into the Web workflow
+- Unified the project version to `0.4.1-alpha.0` across `VERSION` and the root `package.json`
+- Applied `ktlintFormat` to resolve preexisting Kotlin style violations
+- Documentation consistency pass: aligned all docs on Android being unpublished (local project reference only), corrected stale version badges, Flutter CI version, and Kotlin version requirements, removed inaccurate ESLint/Prettier claims, reconciled test-coverage wording, and fixed the TypeScript `debounce`/`throttle` API description
+
+### Fixed
+
+- Resolved 5 preexisting detekt violations (`MatchingDeclarationName`, `VariableNaming`, `UseRequire`): renamed `Throttle.kt`/`Debounce.kt` → `Throttled.kt`/`Debounced.kt`, `_cancel` → `cancelAction`, and used `require()` in `formatCurrency`
+
 ## [0.4.1-alpha.0] - 2026-05-04
 
 **Changed**
 
 - Version bump to unblock CI publish (0.4.0-alpha.0 already published to npm and pub.dev)
-- Android/Kotlin Maven Central publishing configured (`com.vanniktech.maven.publish`)
 - Documentation consistency pass: fixed Kotlin `debounce` call-site examples, version references, broken links
 - Created `packages/core/android/README.md`
 - Expanded `packages/core/flutter/README.md` with full API docs and lifecycle examples
@@ -97,7 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **debounce** function for delaying function execution
   - Web: `debounce<T>(fn: T, wait?: number): T`
   - Kotlin: `debounce<T>(waitMs: Long, scope: CoroutineScope, dest: (T) -> Unit): (T) -> Unit`
-  - Dart: `debounce<T>(Function fn, [Duration wait])` and `debounceVoid(VoidCallback fn, [Duration wait])`
+  - Dart: `debounce<T>(void Function(T) action, [Duration wait])`
 - **isEmail** function for email validation
   - Web: `isEmail(value: string): boolean`
   - Kotlin: `isEmail(value: String): Boolean`
@@ -116,7 +127,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Flutter CI: Flutter 3.27, Dart 3.0+, flutter_test, DartDoc documentation
 - **Code quality tools**
   - Kotlin: ktlint formatting, detekt static analysis
-  - Web: ESLint, Prettier (configured)
+  - Web: ESLint, Prettier (planned)
 - **Path-based build optimization** to run only relevant CI jobs
 - **Automated artifact generation** (JARs, documentation, test reports)
 
@@ -130,7 +141,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Build & Testing
 
-- **100% test coverage** across both platforms
+- **Comprehensive test coverage** across all platforms
 - **Automated builds** with caching for optimal performance
 - **Cross-platform compatibility** testing
 - **Documentation generation** (TypeDoc + Dokka)

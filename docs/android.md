@@ -20,7 +20,7 @@ Then add the dependency to your module `build.gradle.kts`:
 ```kotlin
 dependencies {
     implementation(project(":kompkit-core"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
 ```
 

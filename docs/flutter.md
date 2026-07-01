@@ -63,14 +63,14 @@ final searchDebounced = debounce<String>((String query) {
 searchDebounced('flutter');
 searchDebounced('dart'); // Previous call is cancelled
 
-// For void functions (no parameters)
-final saveDebounced = debounceVoid(() {
+// For callbacks that take no meaningful argument, use `void` as the type argument
+final saveDebounced = debounce<void>((_) {
   print('Saving data...');
   // Perform save logic here
 }, const Duration(milliseconds: 500));
 
 // Usage
-saveDebounced();
+saveDebounced(null);
 ```
 
 #### Flutter Widget Example
@@ -147,8 +147,8 @@ TextFormField(
 Format numbers as localized currency strings:
 
 ```dart
-// Default (USD, en-US locale)
-print(formatCurrency(1234.56)); // "$1,234.56"
+// Default (USD, en-US locale) — intl renders the ISO code, not a symbol
+print(formatCurrency(1234.56)); // "USD1,234.56"
 
 // Euro
 print(formatCurrency(1234.56, currency: 'EUR', locale: 'es-ES')); // "1.234,56 EUR"

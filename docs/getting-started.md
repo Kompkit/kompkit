@@ -31,13 +31,18 @@ flutter pub get
 
 > [pub.dev/packages/kompkit_core](https://pub.dev/packages/kompkit_core)
 
-### Android / Kotlin (Maven Central)
+### Android / Kotlin — Local only
 
-Add to your `app/build.gradle.kts`:
+> **Note**: The Android/Kotlin package is not yet published to Maven. Use a local project reference for now.
 
 ```kotlin
+// settings.gradle.kts
+include(":kompkit-core")
+project(":kompkit-core").projectDir = file("path/to/KompKit/packages/core/android")
+
+// app/build.gradle.kts
 dependencies {
-    implementation("com.kompkit:kompkit-core:0.4.1-alpha.0")
+    implementation(project(":kompkit-core"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
 ```

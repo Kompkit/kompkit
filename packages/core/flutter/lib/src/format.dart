@@ -17,12 +17,15 @@ import 'package:intl/intl.dart';
 /// **Returns:** A formatted currency string according to the specified locale
 /// @throws [ArgumentError] if [amount] is NaN or Infinity, or if [currency] or [locale] is invalid.
 ///
+/// The `intl` package renders the ISO 4217 code (not a localized symbol) by
+/// default, so amounts read as `USD1,234.56` rather than `$1,234.56`.
+///
 /// **Example:**
 /// ```dart
-/// formatCurrency(1234.56);                                    // "$1,234.56" (en-US / USD default)
-/// formatCurrency(1234.56, currency: "EUR", locale: "es-ES"); // "1.234,56 €"
-/// formatCurrency(1000, currency: "JPY", locale: "ja-JP");    // "¥1,000"
-/// formatCurrency(999.99, currency: "GBP", locale: "en-GB");  // "£999.99"
+/// formatCurrency(1234.56);                                    // "USD1,234.56" (en-US / USD default)
+/// formatCurrency(1234.56, currency: "EUR", locale: "es-ES"); // "1.234,56 EUR"
+/// formatCurrency(1000, currency: "JPY", locale: "ja-JP");    // "JPY1,000"
+/// formatCurrency(999.99, currency: "GBP", locale: "en-GB");  // "GBP999.99"
 /// formatCurrency(double.nan);                                 // throws ArgumentError
 /// ```
 /// ISO 4217 currency codes are exactly 3 uppercase ASCII letters.

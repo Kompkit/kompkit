@@ -8,16 +8,17 @@
 /// 
 /// - **Cross-platform compatibility**: Identical APIs across all platforms
 /// - **Type safety**: Full Dart null safety support
-/// - **Zero dependencies**: Minimal external dependencies (only `intl` for formatting)
-/// - **Comprehensive testing**: 100% test coverage
+/// - **Minimal dependencies**: only `intl` (for `formatCurrency`)
+/// - **Comprehensive testing**: extensive unit tests
 /// - **Rich documentation**: Detailed API docs with examples
 /// 
 /// ## Available Utilities
 /// 
 /// - [debounce] - Delay function execution with automatic cancellation
-/// - [debounceVoid] - Debounce functions with no parameters
+/// - [throttle] - Rate-limit function execution to at most once per interval
 /// - [isEmail] - Email address validation using regex patterns
 /// - [formatCurrency] - Localized currency formatting
+/// - [clamp] - Constrain a value to a `[min, max]` range
 /// 
 /// ## Quick Start
 /// 
@@ -31,8 +32,8 @@
 /// // Validate email addresses
 /// print(isEmail('user@example.com')); // true
 /// 
-/// // Format currency
-/// print(formatCurrency(1234.56, currency: 'USD', locale: 'en_US')); // "$1,234.56"
+/// // Format currency (intl renders the ISO code, not a symbol)
+/// print(formatCurrency(1234.56, currency: 'USD', locale: 'en_US')); // "USD1,234.56"
 /// ```
 library kompkit_core;
 
