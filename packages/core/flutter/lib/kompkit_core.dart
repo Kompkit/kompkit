@@ -16,6 +16,7 @@
 /// 
 /// - [debounce] - Delay function execution with automatic cancellation
 /// - [throttle] - Rate-limit function execution to at most once per interval
+/// - [retry] - Automatic retries with exponential backoff
 /// - [isEmail] - Email address validation using regex patterns
 /// - [formatCurrency] - Localized currency formatting
 /// - [clamp] - Constrain a value to a `[min, max]` range
@@ -42,3 +43,4 @@ export 'src/validate.dart';
 export 'src/format.dart';
 export 'src/clamp.dart';
 export 'src/throttle.dart';
+export 'src/retry.dart';

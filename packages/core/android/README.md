@@ -37,7 +37,7 @@ dependencies {
 | `Fragment` / `Activity` | `lifecycleScope` |
 | Plain JVM / tests | `CoroutineScope(Dispatchers.Default)` |
 
-`isEmail`, `formatCurrency`, and `clamp` are pure functions — no coroutine dependency.
+`isEmail`, `formatCurrency`, and `clamp` are pure functions — no coroutine dependency. `retry` is a `suspend` function and can be called from any coroutine scope.
 
 ## Usage
 
@@ -192,6 +192,61 @@ fun ScrollTracker() {
 
 ---
 
+### `retry`
+
+Executes a suspending block with automatic retries and exponential backoff. On each failure the delay grows exponentially, capped at `maxDelayMs`. If all attempts fail, the last exception is rethrown.
+
+**Signature:**
+```kotlin
+suspend fun <T> retry(
+    options: RetryOptions = RetryOptions(),
+    action: suspend () -> T,
+): T
+
+data class RetryOptions(
+    val maxAttempts: Int = 3,       // must be >= 1
+    val baseDelayMs: Long = 1_000L, // must be >= 0
+    val maxDelayMs: Long = 30_000L, // must be >= baseDelayMs
+    val multiplier: Double = 2.0,   // must be >= 1.0
+    val retryIf: ((Throwable) -> Boolean)? = null,
+)
+```
+
+**Basic usage:**
+```kotlin
+// Default: 3 attempts, 1s base delay, ×2 multiplier
+val data = retry { api.fetchData() }
+
+// Custom options
+val result = retry(RetryOptions(maxAttempts = 5, baseDelayMs = 500)) {
+    unreliableCall()
+}
+
+// Conditional retry — skip auth errors
+retry(RetryOptions(retryIf = { it !is AuthException })) {
+    fetchWithAuth()
+}
+```
+
+**ViewModel example:**
+```kotlin
+class DataViewModel : ViewModel() {
+    val data = MutableLiveData<Result<Data>>()
+
+    fun load() {
+        viewModelScope.launch {
+            data.value = runCatching {
+                retry(RetryOptions(maxAttempts = 3, baseDelayMs = 1_000)) {
+                    repository.fetchData()
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
 ### `isEmail`
 
 Validates an email address using a robust regex pattern.
@@ -269,12 +324,14 @@ fun VolumeSlider() {
 ```kotlin
 fun <T> debounce(action: (T) -> Unit, waitMs: Long = 250L, scope: CoroutineScope): Debounced<T>
 fun <T> throttle(waitMs: Long, scope: CoroutineScope, action: (T) -> Unit): Throttled<T>
+suspend fun <T> retry(options: RetryOptions = RetryOptions(), action: suspend () -> T): T
 fun isEmail(value: String): Boolean
 fun formatCurrency(amount: Double, currency: String = "USD", locale: String = "en-US"): String
 fun clamp(value: Double, min: Double, max: Double): Double
 
 class Debounced<T> { operator fun invoke(value: T); fun cancel() }
 class Throttled<T> { operator fun invoke(value: T); fun cancel() }
+data class RetryOptions(maxAttempts: Int = 3, baseDelayMs: Long = 1000, maxDelayMs: Long = 30000, multiplier: Double = 2.0, retryIf: ((Throwable) -> Boolean)? = null)
 ```
 
 ## Platform notes

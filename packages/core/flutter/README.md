@@ -182,6 +182,76 @@ class _ScrollTrackerState extends State<ScrollTracker> {
 
 ---
 
+### `retry`
+
+Executes an async function with automatic retries and exponential backoff. On each failure the delay grows exponentially, capped at `maxDelay`. If all attempts fail, the last error is rethrown.
+
+```dart
+Future<T> retry<T>(
+  Future<T> Function() fn, [
+  RetryOptions options = const RetryOptions(),
+])
+
+class RetryOptions {
+  final int maxAttempts;       // default 3
+  final Duration baseDelay;    // default 1s
+  final Duration maxDelay;     // default 30s
+  final double multiplier;     // default 2.0
+  final bool Function(Object)? retryIf;
+}
+```
+
+```dart
+// Default: 3 attempts, 1s base delay, ×2 multiplier
+final data = await retry(() => httpClient.get('/api/data'));
+
+// Custom options
+final result = await retry(
+  () => unreliableCall(),
+  const RetryOptions(
+    maxAttempts: 5,
+    baseDelay: Duration(milliseconds: 500),
+  ),
+);
+
+// Conditional retry — skip auth errors
+await retry(
+  () => fetchWithAuth(),
+  RetryOptions(retryIf: (e) => e is! AuthException),
+);
+```
+
+**Flutter example — loading data with retry:**
+
+```dart
+class _DataWidgetState extends State<DataWidget> {
+  Future<Data>? _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = retry(
+      () => repository.fetchData(),
+      const RetryOptions(maxAttempts: 3, baseDelay: Duration(seconds: 1)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Data>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) return DataView(data: snapshot.data!);
+        if (snapshot.hasError) return ErrorView(error: snapshot.error!);
+        return const CircularProgressIndicator();
+      },
+    );
+  }
+}
+```
+
+---
+
 ### `isEmail`
 
 Validates an email address.

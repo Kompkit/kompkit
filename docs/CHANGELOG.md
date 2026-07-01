@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`retry` with exponential backoff** across all three platforms
+  - TypeScript: `retry<T>(fn: () => T | Promise<T>, options?: RetryOptions): Promise<T>`
+  - Kotlin: `suspend fun <T> retry(options: RetryOptions = RetryOptions(), action: suspend () -> T): T`
+  - Dart: `Future<T> retry<T>(Future<T> Function() fn, [RetryOptions options])`
+  - Configurable `maxAttempts` (default 3), `baseDelay` (1 s), `maxDelay` (30 s), `multiplier` (×2), and `retryIf` predicate
+  - Comprehensive test suites added for all platforms (timing, backoff cap, conditional retry, validation)
+
 ### Changed
 
 - **CI quality gates hardened**: removed `|| echo` fallbacks so web typecheck/tests and Android `ktlintCheck`/`detekt` now actually fail the build instead of passing silently
