@@ -1,7 +1,7 @@
 {
   "name": "kompkit",
   "version": "0.4.1-alpha.0",
-  "description": "A lightweight cross-platform utility kit for Web (TypeScript), Android (Kotlin), and Flutter (Dart): debounce, isEmail, formatCurrency",
+  "description": "A lightweight cross-platform utility kit for Web (TypeScript), Android (Kotlin), and Flutter (Dart): debounce, throttle, isEmail, formatCurrency, clamp",
   "private": true,
   "workspaces": [
     "packages/core/web"

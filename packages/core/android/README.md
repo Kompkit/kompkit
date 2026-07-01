@@ -6,28 +6,25 @@ Cross-platform utility functions for Android and JVM applications. Part of the [
 
 ## Installation
 
-Add to your `app/build.gradle.kts`:
+> **Note**: The Android/Kotlin package is not yet published to Maven. Use a local project reference for now.
+
+Add the project reference to your `settings.gradle.kts`:
+
+```kotlin
+include(":kompkit-core")
+project(":kompkit-core").projectDir = file("path/to/KompKit/packages/core/android")
+```
+
+Then add the dependency to your module `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("com.kompkit:kompkit-core:0.4.1-alpha.0")
+    implementation(project(":kompkit-core"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 }
 ```
 
-Make sure `mavenCentral()` is in your repository list (it is by default in new Android projects):
-
-```kotlin
-// settings.gradle.kts
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
-```
-
-> Published on [central.sonatype.com](https://central.sonatype.com/artifact/com.kompkit/kompkit-core)
+> Maven Central publishing is planned — see the [roadmap](../../../docs/roadmap.md).
 
 ## Coroutines setup
 
@@ -282,7 +279,7 @@ class Throttled<T> { operator fun invoke(value: T); fun cancel() }
 
 ## Platform notes
 
-- Requires **JDK 17+** and **Kotlin 2.0+**
+- Requires **JDK 17+** and **Kotlin 2.3+**
 - Compatible with **Android API 21+** (minSdk 21)
 - `debounce` and `throttle` require `kotlinx-coroutines-core` (included transitively)
 - `formatCurrency` uses `java.text.NumberFormat` — locale fallback behavior follows JVM conventions

@@ -36,9 +36,9 @@ final onSearch = debounce<String>(
 print(isEmail('user@example.com')); // true
 print(isEmail('invalid@'));         // false
 
-// Currency formatting (en-US / USD default)
-print(formatCurrency(1234.56));                        // "$1,234.56"
-print(formatCurrency(1234.56, currency: 'EUR', locale: 'es-ES')); // "1.234,56 €"
+// Currency formatting (en-US / USD default; intl renders the ISO code, not a symbol)
+print(formatCurrency(1234.56));                        // "USD1,234.56"
+print(formatCurrency(1234.56, currency: 'EUR', locale: 'es-ES')); // "1.234,56 EUR"
 
 // Clamp a value to a range
 print(clamp(15.0, 0.0, 10.0)); // 10.0
@@ -59,7 +59,10 @@ final onScroll = throttle<double>(
 Delays execution until calls stop for the given `wait` duration. The last call within the wait period executes; all earlier ones are cancelled.
 
 ```dart
-Debounced<T> debounce<T>(void Function(T) action, Duration wait)
+Debounced<T> debounce<T>(
+  void Function(T) action, [
+  Duration wait = const Duration(milliseconds: 250),
+])
 ```
 
 ```dart
@@ -204,12 +207,13 @@ String formatCurrency(double amount, {String currency = 'USD', String locale = '
 ```
 
 ```dart
-formatCurrency(1234.56)                              // "$1,234.56"
-formatCurrency(1234.56, currency: 'EUR', locale: 'es-ES') // "1.234,56 €"
-formatCurrency(1234.56, currency: 'JPY', locale: 'ja-JP') // "¥1,235"
+formatCurrency(1234.56)                              // "USD1,234.56"
+formatCurrency(1234.56, currency: 'EUR', locale: 'es-ES') // "1.234,56 EUR"
+formatCurrency(1234.56, currency: 'JPY', locale: 'ja-JP') // "JPY1,235"
 ```
 
 - Accepts BCP 47 locale strings; normalizes `en-US` → `en_US` for the `intl` package internally
+- The `intl` package renders the **ISO 4217 code** (e.g. `USD`, `EUR`) rather than a localized symbol (`$`, `€`) — this is a documented [platform divergence](../../../docs/ARCHITECTURE.md#api-parity-contract)
 - Throws on invalid `currency` codes
 
 ---

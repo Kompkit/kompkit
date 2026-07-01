@@ -27,7 +27,7 @@ KompKit uses GitHub Actions for continuous integration with separate workflows o
 
 **Jobs:**
 
-- **web**: Lint, typecheck, build, test, and generate documentation
+- **web**: Type check (`tsc --noEmit`), build, test, and generate documentation
   - Node.js 20.x with npm caching
   - Lerna-based monorepo management
   - TypeDoc documentation generation
@@ -72,7 +72,7 @@ KompKit uses GitHub Actions for continuous integration with separate workflows o
 **Jobs:**
 
 - **flutter**: Analyze, test, and generate documentation
-  - Flutter 3.24.0 (stable channel)
+  - Flutter 3.27.4 (stable channel)
   - `flutter analyze` for static analysis
   - `flutter test --coverage` with coverage reporting
   - Codecov integration for coverage uploads

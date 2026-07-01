@@ -1,6 +1,6 @@
 # kompkit-core
 
-[![Version](https://img.shields.io/badge/version-0.4.0--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
+[![Version](https://img.shields.io/badge/version-0.4.1--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
 [![Web CI](https://github.com/Kompkit/KompKit/actions/workflows/web.yml/badge.svg?branch=release)](https://github.com/Kompkit/KompKit/actions/workflows/web.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -19,7 +19,7 @@ npm install kompkit-core
 
 ### `debounce`
 
-Delays invoking a function until after `wait` ms have elapsed since the last call. Returns a `Debounced` object with a `cancel()` method.
+Delays invoking a function until after `wait` ms have elapsed since the last call. Returns a `Debounced` wrapper — call it exactly like the original function, and call `.cancel()` to discard any pending execution.
 
 ```ts
 import { debounce } from "kompkit-core";
@@ -28,7 +28,7 @@ const search = debounce((query: string) => {
   fetchResults(query);
 }, 300);
 
-input.addEventListener("input", (e) => search.call(e.target.value));
+input.addEventListener("input", () => search(input.value));
 
 // Cancel a pending call (e.g. on component unmount)
 search.cancel();
@@ -37,10 +37,13 @@ search.cancel();
 **Signature:**
 
 ```ts
-function debounce<T>(action: (value: T) => void, wait?: number): Debounced<T>;
+function debounce<T extends (...args: any[]) => void>(
+  fn: T,
+  wait?: number,
+): Debounced<T>;
 
-interface Debounced<T> {
-  call(value: T): void;
+interface Debounced<T extends (...args: any[]) => void> {
+  (...args: Parameters<T>): void;
   cancel(): void;
 }
 ```
@@ -193,6 +196,7 @@ KompKit aims for conceptual API parity, but some differences exist due to platfo
 | `formatCurrency` — Kotlin              | Accepts a BCP 47 `String` locale, converts to `Locale` internally.                                         |
 | `formatCurrency` — invalid locale      | TypeScript/V8 and Kotlin/JVM fall back silently; Dart (`intl`) throws.                                     |
 | `formatCurrency` — currency validation | TypeScript uses `Intl.NumberFormat`; Kotlin uses `Currency.getInstance`; Dart uses a regex (`^[A-Z]{3}$`). |
+| `formatCurrency` — symbol vs code      | TypeScript/Kotlin render the localized symbol (`$1,234.56`); Dart's `intl` renders the ISO 4217 code (`USD1,234.56`).       |
 
 ## Cross-platform
 

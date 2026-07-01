@@ -55,7 +55,7 @@ This section defines the formal contract for cross-platform API consistency in K
 ### What is Guaranteed
 
 - **Function names** are identical across all platforms (`debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle`).
-- **Behavioral semantics** are identical: given the same inputs, all platforms produce the same observable output.
+- **Behavioral semantics** are identical: given the same inputs, all platforms make the same decisions — the same validation, the same rounding, and the same errors. The exact rendered string of `formatCurrency` may differ per platform's locale library (see the divergence table below).
 - **Default values** are identical: `wait = 250ms`, `currency = "USD"`, `locale = "en-US"`.
 - **Error handling philosophy** is consistent: invalid inputs that cannot produce a meaningful result throw/throw-equivalent errors. Silent fallbacks are not permitted.
 - **Cancel capability**: `debounce` returns an object with a `cancel()` method on all platforms, allowing callers to discard pending executions (required for safe use in component lifecycles).
@@ -98,6 +98,7 @@ Any unavoidable divergence between platforms must be:
 | `formatCurrency` | Kotlin accepts `String` locale, converts to `Locale` internally                                                                       | JVM `NumberFormat` API requires `java.util.Locale`                                                                          |
 | `formatCurrency` | TypeScript (V8) and Kotlin (JVM) fall back on unknown locales; Dart throws                                                            | `Intl.NumberFormat` (V8) and `Locale.forLanguageTag` (JVM) are lenient; `intl` (Dart) calls `verifiedLocale()` which throws |
 | `formatCurrency` | Dart validates currency format via regex (3 uppercase letters); Kotlin via `Currency.getInstance`; TypeScript via `Intl.NumberFormat` | Platform APIs differ in how they enforce ISO 4217 — all throw on invalid codes                                              |
+| `formatCurrency` | Dart renders the ISO 4217 **code** (e.g. `USD1,234.56`, `1.234,56 EUR`); TypeScript and Kotlin render the localized **symbol** (`$1,234.56`, `1.234,56 €`) | `intl`'s `NumberFormat.currency` uses the code as the symbol by default; `Intl.NumberFormat` (V8) and `NumberFormat` (JVM) resolve the localized glyph |
 
 ---
 
@@ -271,10 +272,11 @@ While maintaining API consistency, we leverage platform strengths:
 
 ### Dependency Strategy
 
-**Zero Runtime Dependencies:**
+**Minimal Runtime Dependencies:**
 
-- Web utilities use only browser/Node.js built-ins
-- Kotlin utilities use only JDK/Kotlin stdlib
+- Web utilities use only browser/Node.js built-ins (zero runtime dependencies)
+- Kotlin utilities depend only on `kotlinx-coroutines-core` (required by `debounce`/`throttle`)
+- Dart utilities depend only on the `intl` package (required by `formatCurrency`)
 - Development dependencies isolated to build process
 
 ## CI/CD Architecture
@@ -305,9 +307,9 @@ android.yml:
 
 **Automated quality assurance:**
 
-1. **Code formatting**: ktlint (Kotlin), Prettier (TypeScript)
-2. **Static analysis**: detekt (Kotlin), ESLint (TypeScript)
-3. **Testing**: JUnit (Kotlin), Vitest (TypeScript)
+1. **Code formatting**: ktlint (Kotlin); `dart format` (Dart). Prettier/ESLint for TypeScript are planned.
+2. **Static analysis**: detekt (Kotlin), `flutter analyze` (Dart), `tsc --noEmit` type checking (TypeScript)
+3. **Testing**: JUnit (Kotlin), Vitest (TypeScript), `flutter test` (Dart)
 4. **Documentation**: Auto-generated API docs
 5. **Build verification**: Cross-platform compatibility
 
@@ -337,12 +339,11 @@ packages/core/flutter/test/
 
 ### Test Coverage
 
-**100% coverage requirement** across both platforms:
+**Comprehensive coverage** across all three platforms (coverage is still expanding toward the 1.0 goal — see the [roadmap](./roadmap.md)):
 
 - Unit tests for all public APIs
 - Edge case validation
 - Error condition handling
-- Performance benchmarks
 
 ## Documentation Architecture
 
@@ -378,7 +379,7 @@ docs/
 **Standardized process** for expanding the library:
 
 1. **Design phase**: Define cross-platform API contract
-2. **Implementation**: Parallel development in both platforms
+2. **Implementation**: Parallel development across all three platforms
 3. **Testing**: Comprehensive test coverage
 4. **Documentation**: API docs and usage examples
 5. **Integration**: Update exports and build processes
@@ -406,7 +407,7 @@ docs/
 
 **Minimal attack surface:**
 
-- Zero runtime dependencies
+- Minimal runtime dependencies (none on Web; only `kotlinx-coroutines-core` on Kotlin and `intl` on Dart)
 - Pinned development dependencies
 - Regular security audits via Dependabot
 - Automated vulnerability scanning

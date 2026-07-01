@@ -9,7 +9,7 @@ KompKit Core is in early alpha. The current release includes:
 | 5 utilities: `debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle` | ✅ Completed |
 | TypeScript package published to npm                                       | ✅ Completed |
 | Flutter/Dart package published to pub.dev                                 | ✅ Completed |
-| Android/Kotlin Maven Central publishing config                            | ✅ Completed |
+| Android/Kotlin package (local project reference; Maven Central pending)    | 🔄 In Progress |
 | Conceptual API parity across all platforms with documented divergences    | ✅ Completed |
 | Full CI/CD with path-based workflow optimization                          | ✅ Completed |
 | `cancel()` support on `debounce` and `throttle` across all platforms      | ✅ Completed |

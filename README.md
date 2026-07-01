@@ -1,6 +1,6 @@
 # KompKit
 
-[![Version](https://img.shields.io/badge/version-0.4.0--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
+[![Version](https://img.shields.io/badge/version-0.4.1--alpha.0-orange.svg)](https://github.com/Kompkit/KompKit/releases)
 [![Web CI](https://github.com/Kompkit/KompKit/actions/workflows/web.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/web.yml)
 [![Kotlin CI](https://github.com/Kompkit/KompKit/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/android.yml)
 [![Flutter CI](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml/badge.svg?branch=develop)](https://github.com/Kompkit/KompKit/actions/workflows/flutter.yml)
@@ -67,8 +67,8 @@ KompKit provides essential utility functions that work seamlessly across Web (Ty
 
 - ✅ **Cross-platform compatibility** - Identical APIs for Web, Android, and Flutter
 - ✅ **TypeScript support** - Full type safety and IntelliSense
-- ✅ **Zero dependencies** - Lightweight with no external dependencies
-- ✅ **Comprehensive testing** - 100% test coverage across platforms
+- ✅ **Minimal dependencies** - Zero runtime deps on Web; Kotlin uses only `kotlinx-coroutines`, Dart only `intl`
+- ✅ **Comprehensive testing** - Extensive unit tests across all three platforms
 - ✅ **Modern tooling** - Built with latest TypeScript 5.7+ and Kotlin 2.3+
 - ✅ **Rich documentation** - Auto-generated API docs with examples
 - ✅ **CI/CD Ready** - Automated testing with GitHub Actions
@@ -198,8 +198,8 @@ final onSearch = debounce<String>(
 // Validate email
 print(isEmail('user@example.com')); // true
 
-// Format as currency
-print(formatCurrency(1234.56)); // "$1,234.56"
+// Format as currency (Dart's intl renders the ISO code, not a symbol)
+print(formatCurrency(1234.56)); // "USD1,234.56"
 
 // Constrain a value to a range
 print(clamp(15.0, 0.0, 10.0)); // 10.0
@@ -293,8 +293,9 @@ KompKit aims for **conceptual parity**, not syntactic identity. The following di
 | `throttle`       | Dart     | `wait` is a `Duration`, not a number                            | Idiomatic Dart — no bare millisecond integers               |
 | `formatCurrency` | Kotlin   | Accepts `String` locale, converts to `Locale` internally        | JVM `NumberFormat` requires `java.util.Locale`              |
 | `formatCurrency` | Dart     | Accepts BCP 47 locale, normalizes hyphen→underscore internally  | `intl` package uses underscore-separated locale identifiers |
+| `formatCurrency` | Dart     | Renders the ISO 4217 code (`USD1,234.56`), not the symbol (`$1,234.56`) | `intl`'s `NumberFormat.currency` uses the code as the symbol by default |
 
-All platforms accept BCP 47 locale strings (e.g., `"en-US"`). All platforms throw on invalid `currency` or `locale` inputs.
+All platforms accept BCP 47 locale strings (e.g., `"en-US"`). All platforms throw on invalid `currency` or `locale` inputs. Note that Web and Android render the localized currency **symbol**, while Flutter/Dart renders the ISO 4217 **code**.
 
 ## Contributing
 
