@@ -62,6 +62,7 @@ KompKit provides essential utility functions that work seamlessly across Web (Ty
 - **💰 formatCurrency** - Format numbers as currency with full locale support
 - **📐 clamp** - Constrain a number within an inclusive [min, max] range
 - **⏱️ throttle** - Limit a function to execute at most once per wait period
+- **🔄 retry** - Automatic retries with exponential backoff for async operations
 
 ### Key Features
 
@@ -294,6 +295,8 @@ KompKit aims for **conceptual parity**, not syntactic identity. The following di
 | `formatCurrency` | Kotlin   | Accepts `String` locale, converts to `Locale` internally        | JVM `NumberFormat` requires `java.util.Locale`              |
 | `formatCurrency` | Dart     | Accepts BCP 47 locale, normalizes hyphen→underscore internally  | `intl` package uses underscore-separated locale identifiers |
 | `formatCurrency` | Dart     | Renders the ISO 4217 code (`USD1,234.56`), not the symbol (`$1,234.56`) | `intl`'s `NumberFormat.currency` uses the code as the symbol by default |
+| `retry`          | Kotlin   | `suspend fun` — must be called from a coroutine scope               | Structured concurrency — no `async`/`await` outside coroutines      |
+| `retry`          | Dart     | Uses `Duration` for delays, not milliseconds                        | Idiomatic Dart — consistent with `debounce`/`throttle`              |
 
 All platforms accept BCP 47 locale strings (e.g., `"en-US"`). All platforms throw on invalid `currency` or `locale` inputs. Note that Web and Android render the localized currency **symbol**, while Flutter/Dart renders the ISO 4217 **code**.
 

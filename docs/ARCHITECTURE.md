@@ -47,6 +47,7 @@ All modules implement identical functionality:
 - **formatCurrency**: Localized currency formatting
 - **clamp**: Constrain a number within an inclusive [min, max] range
 - **throttle**: Limit function execution to at most once per wait period
+- **retry**: Automatic retries with exponential backoff for async operations
 
 ## API Parity Contract
 
@@ -54,7 +55,7 @@ This section defines the formal contract for cross-platform API consistency in K
 
 ### What is Guaranteed
 
-- **Function names** are identical across all platforms (`debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle`).
+- **Function names** are identical across all platforms (`debounce`, `isEmail`, `formatCurrency`, `clamp`, `throttle`, `retry`).
 - **Behavioral semantics** are identical: given the same inputs, all platforms make the same decisions — the same validation, the same rounding, and the same errors. The exact rendered string of `formatCurrency` may differ per platform's locale library (see the divergence table below).
 - **Default values** are identical: `wait = 250ms`, `currency = "USD"`, `locale = "en-US"`.
 - **Error handling philosophy** is consistent: invalid inputs that cannot produce a meaningful result throw/throw-equivalent errors. Silent fallbacks are not permitted.
@@ -77,6 +78,7 @@ isEmail(value)                    → Boolean
 formatCurrency(amount, options)   → String
 clamp(value, min, max)            → Number
 throttle(fn, wait)                → Throttled<T>  (with .cancel())
+retry(fn, options)                → Promise<T> / T  (async with backoff)
 ```
 
 A developer familiar with the TypeScript API should be able to use the Kotlin or Dart API with only idiomatic adjustments — not conceptual re-learning.
@@ -99,6 +101,8 @@ Any unavoidable divergence between platforms must be:
 | `formatCurrency` | TypeScript (V8) and Kotlin (JVM) fall back on unknown locales; Dart throws                                                            | `Intl.NumberFormat` (V8) and `Locale.forLanguageTag` (JVM) are lenient; `intl` (Dart) calls `verifiedLocale()` which throws |
 | `formatCurrency` | Dart validates currency format via regex (3 uppercase letters); Kotlin via `Currency.getInstance`; TypeScript via `Intl.NumberFormat` | Platform APIs differ in how they enforce ISO 4217 — all throw on invalid codes                                              |
 | `formatCurrency` | Dart renders the ISO 4217 **code** (e.g. `USD1,234.56`, `1.234,56 EUR`); TypeScript and Kotlin render the localized **symbol** (`$1,234.56`, `1.234,56 €`) | `intl`'s `NumberFormat.currency` uses the code as the symbol by default; `Intl.NumberFormat` (V8) and `NumberFormat` (JVM) resolve the localized glyph |
+| `retry`          | Kotlin is a `suspend fun`; TypeScript/Dart are `async`                                                                                                       | Structured concurrency — Kotlin has no free-standing `async`/`await`                                                                                   |
+| `retry`          | Dart uses `Duration` for `baseDelay`/`maxDelay`; TypeScript/Kotlin use milliseconds (`number`/`Long`)                                                        | Idiomatic Dart — consistent with `debounce`/`throttle`                                                                                                 |
 
 ---
 

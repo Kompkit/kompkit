@@ -136,6 +136,52 @@ function throttle<T extends (...args: any[]) => void>(
 
 ---
 
+### `retry`
+
+Executes an async function with automatic retries and exponential backoff. On each failure the delay doubles (by default), capped at `maxDelay`. If all attempts fail, the last error is rethrown.
+
+```ts
+import { retry } from "kompkit-core";
+
+// Basic — 3 attempts, 1s base delay, ×2 multiplier (defaults)
+const data = await retry(() => fetch("/api/data").then((r) => r.json()));
+
+// Custom options
+const result = await retry(() => unreliableCall(), {
+  maxAttempts: 5,
+  baseDelay: 500,
+  multiplier: 3,
+  maxDelay: 10_000,
+});
+
+// Conditional retry — skip auth errors
+await retry(() => fetchWithAuth(), {
+  retryIf: (err) => (err as Response)?.status !== 401,
+});
+```
+
+**Signature:**
+
+```ts
+function retry<T>(
+  fn: () => T | Promise<T>,
+  options?: RetryOptions,
+): Promise<T>;
+
+interface RetryOptions {
+  maxAttempts?: number; // default 3
+  baseDelay?: number; // default 1000 (ms)
+  maxDelay?: number; // default 30000 (ms)
+  multiplier?: number; // default 2
+  retryIf?: (error: unknown) => boolean;
+}
+```
+
+- Throws `RangeError` for invalid option values
+- Delay sequence: `baseDelay`, `baseDelay × multiplier`, `baseDelay × multiplier²`, … capped at `maxDelay`
+
+---
+
 ### `formatCurrency`
 
 Formats a number as a localized currency string using `Intl.NumberFormat`.
